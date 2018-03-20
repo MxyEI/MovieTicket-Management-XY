@@ -5,20 +5,15 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>快速开始</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css">
-    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="../static/layui/css/layui.css">
+    <link rel="stylesheet" href="../static/css/admin.css">
 </head>
 <body>
 
 <div class="layui-card">
-    <div class="layui-card-header">写在前面</div>
+    <div class="layui-card-header">开始</div>
     <div class="layui-card-body">
-        <blockquote class="layui-elem-quote">
-            简介：LAU（lying-admin-ui）是一款基于layui的后台前端框架，使用LAU的基本前提是熟悉layui的模块化设计和使用，如果不懂，请先查看<a style="color: #01AAED;" href="http://www.layui.com/doc/#modules" target="_blank"> layui模块化用法 </a><br>
-            初衷：被<a style="color: #01AAED;" href="http://www.layui.com/admin/" target="_blank"> layuiAdmin </a>深深的吸引了，想要使用，无奈的是刚结婚的自己手头紧巴巴的，于是就想动手做一个一样的后台框架（这可能也是我编码的动力吧）<br>
-            构造：<a style="color: #01AAED;" href="http://www.layui.com/doc/element/layout.html#admin" target="_blank"> layui的后台布局 </a> + <a style="color: #01AAED;" href="http://www.layui.com/" target="_blank"> layui </a> + <a style="color: #01AAED;" href="http://www.layui.com/admin/pro/" target="_blank"> layuiAdmin的部分css </a>，有些样式是自己写不来的，抄袭了layuiAdmin，希望贤心谅解<br>
-            交流：<a style="color: #01AAED;" href="http://www.bycodes.net/" target="_blank"> 码外社区 </a>、<a style="color: #01AAED;" href="https://jq.qq.com/?_wv=1027&k=543VUa3" target="_blank"> QQ群 </a>、<a style="color: #01AAED;" href="https://github.com/carolkey/lying-admin" target="_blank"> github </a>
-        </blockquote>
+
     </div>
 </div>
 
@@ -203,9 +198,9 @@
 </div>
 
 </body>
-<script src="/static/layui/layui.js"></script>
+<script src="../static/layui/layui.js"></script>
 <script>
-    layui.config({base: '/static/js/'}).use(['admin', 'code'], function() {
+    layui.config({base: '../static/js/'}).use(['admin', 'code'], function() {
         layui.code({
             about: false,
             encode: true
