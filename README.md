@@ -1,2 +1,2 @@
-# MovieTicket-Front-End-XY
-影院订票系统前端-vue全家桶+webpack
+# MovieTicket-management-XY
+影院订票系统后台管理系统-layui
