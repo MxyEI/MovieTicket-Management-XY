@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta id="i18n_pagename" content="common">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ECharts</title>
+	<!-- 引入 echarts.js -->
+	<script src="./js/echarts.js"></script>
+	<script src="./js/jquery.min.js"></script>
+	<script src="./js/common.js"></script>
+	<link rel="stylesheet" href="./css/bootstrapValidator.min.css" >
+	<link rel="stylesheet" href="./css/bootstrap.min.css" >
+	<link rel="stylesheet" href="./css/bootstrap-theme.min.css" >
+	<link rel="stylesheet" href="./css/bootstrap-multiselect.css">
+	<link rel="stylesheet" href="./css/font-awesome.min.css"/>
+	<script src="./js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="./css/bootstrap-table.css">
+	<script src="./js/bootstrap-table.js"></script>
+	<script src="./js/bootstrapValidator.min.js"></script>
+	<!-- Latest compiled and minified Locales -->
+	<script src="./js/locale/bootstrap-table-zh-CN.js"></script>
+	<script src="./i18n/jquery.i18n.properties.js"></script>
+	<script src="./i18n/language.js"></script>
+	<script src="./js/bootstrap-table-export.js"></script>
+	<script src="./js/table-export.js"></script>
+	<script src="./js/bootstrap-multiselect.js"></script>
+	<script src="./js/visualization.js"></script>
+	<script src="./js/jquery.base64.js"></script>
+	<script src="./map/js/china.js"></script>
+	<style type="text/css">
+		ul.thumbnails.image_picker_selector {
+			overflow: auto;
+			list-style-image: none;
+			list-style-position: outside;
+			list-style-type: none;
+			padding: 0px;
+			margin: 0px;
+		}
+
+		ul.thumbnails.image_picker_selector li {
+			margin: 5px 5px 5px 5px;
+			float: left;
+			height: 250px;
+			width: 250px
+		}
+
+		ul.thumbnails.image_picker_selector li .thumbnail {
+			padding: 4px;
+			border: 1px solid #dddddd;
+			height: 230px;
+			width: 230px
+		}
+
+		ul.thumbnails.image_picker_selector li .thumbnail.selected {
+			border: 3px solid #2f3238;
+		}
+
+		body {
+			padding-top: 5px;
+			padding-left: 5px;
+		}
+
+		.inputcolor {
+			background-color: #222;
+			color: white;
+			padding: 2px;
+			border: hidden;
+			display: compact;
+		}
+
+		li.reply {
+			position: fixed;
+			right: 5px;
+		}
+
+		/*选择图表-图片集样式*/
+		.thumbnail>img {
+			height: 100%
+		}
+		/*自定义宽度*/
+		.myOwnDdl {
+			display: inline-block;
+			width: 100%;
+		}
+
+		/* 实现宽度自定义 */
+		.myOwnDdl .btn-group {
+			width: 100%;
+		}
+
+		.myOwnDdl .multiselect {
+			width: 100%;
+			text-align: right;
+			margin-top: -5px;
+		}
+
+		.myOwnDdl ul {
+			width: 100%;
+		}
+
+		.myOwnDdl .multiselect-selected-text {
+			position: absolute;
+			left: 0;
+			right: 25px;
+			text-align: left;
+			padding-left: 20px;
+		}
+
+		/*控制隔行换色*/
+		.myOwnDll .multiselect-container li.odd {
+			background: #eeeeee;
+		}
+	</style>
+</head>
+
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="div" align="right">
+	<a class="btn btn-default btn-sm" id="larger image" onclick="largerimage()" style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+		<i class="glyphicon glyphicon-eye-open i18n" name="larger image"></i></a>
+	<a class="btn btn-default btn-sm" id="drill" data-toggle="modal" style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+		<i class="glyphicon glyphicon-plus i18n" name="adddrill"></i></a>
+	<a class="btn btn-default btn-sm" id="button"  onclick="exportImage()" style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+		<i class="glyphicon glyphicon-ok i18n" name="confirm"></i></a>
+</div>
+<div id="returndiv" align="right" style="margin-top: 5px;">
+	<a class="btn btn-default btn-sm" id="return-button"   style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+		<i class="fa fa-mail-reply i18n" name="return"></i></a>
+</div>
+<div id="main" style="width: 500px;height:550px;"></div>
+<div style="margin: 20px;"><table id="table" ></table></div>
+
+
+<!--excel导入数据  添加下钻-->
+<div class="modal fade" id="addDrillForExcelChart" tabindex="-1"
+	 role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="height: 90%; width: 80%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+				<h4 class="modal-title i18n" name="adddrill" id="myModalLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div class="picker" id="imgpicker"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default i18n" name="close" data-dismiss="modal"></button>
+				<button type="button" class="btn btn-default i18n"
+						onclick="confirmDrillForExcelData()" name="confirm"
+						data-bind="click: add_new_widget"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="addDrill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel i18n" name="adddrill"></h4>
+			</div>
+			<div class="modal-body">
+				<form id="sqlform">
+					<div class="form-group">
+						<label for="name" class="i18n" name="chooseDataSource" ></label>
+						<select class="form-control"  name="drillsourcename" id="drillselectpicker">
+							<option class="i18n" name="choose"></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="name" class="i18n" name="drilltype" ></label>
+						<select class="form-control" id="drilltype" name="drilltype">
+							<option value="pie" class="i18n" name="pie"></option>
+							<option value="bar" class="i18n" name="bar"></option>
+							<option value="line" class="i18n" name="line"></option>
+							<option value="gauge" class="i18n" name="gauge"></option>
+							<option value="funnel" class="i18n" name="funnel"></option>
+							<option value="rose" class="i18n" name="rose"></option>
+						</select>
+					</div>
+					<label for="name" class="i18n" name="xaxis"></label>
+					<select class="form-control" name="xfield" id="xfield">
+
+					</select>
+					<div class="myOwnDdl">
+						<label for="name" class="i18n" name="yaxis"></label>
+						<select class="form-control" name="yfield" id="yfield">
+						</select>
+					</div>
+					<label for="name" class="i18n" name="associated"></label>
+					<select class="form-control" name="associated" id="associated">
+					</select>
+					<label for="name" class="i18n" name="conditions"></label>
+					<select class="form-control" name="conditions" id="conditions">
+						<option class="i18n" name="xaxis"></option>
+						<option class="i18n" name="yaxis"></option>
+					</select>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-default btn-sm"  data-dismiss="modal" style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+					<i class="glyphicon glyphicon-remove i18n" name="close"></i> </a>
+				<a class="btn btn-default btn-sm" onclick="confirm()" style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+					<i class="glyphicon glyphicon-ok i18n" name="confirm"></i> </a>
+
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
+</div>
+<script type="text/javascript">
+    var div=document.getElementById("div");
+    if(visualizationid!=''&&visualizationid!=null){
+        div.setAttribute("style","display:none");
+    }
+    $(document).ready(function() {
+        getLayerLoad("drillselectpicker");
+        if(type=='radar' || type == 'map' || type == 'heatmap'){
+            document.getElementById("drill").setAttribute("style","display:none");
+        }
+    });
+    var returndiv=document.getElementById("returndiv");
+    returndiv.setAttribute("style","display:none");
+    var sourceType=getUrlParam("sourceType");  //区分数据来源为数据库还是excel,1为数据库，0为excel数据
+    var drillflag='0';
+    var sourceid='';
+    var drilltype='';
+    var drilloption=[];
+    var associated='';
+    var drillxfield='';
+    var drillyfield='';
+    var identifier='';
+    var conditions='';
+    var xarray = [];
+    var yarray = [];
+    var yarray2 = [];
+    var option = [];
+    var xfield="";
+    var yfield=""
+    var yfield2=""
+    $.ajax({
+        url: SERVER_URL+"/visualization/visualization/selectDataByCond",    //请求的url地址
+        dataType: "json",   //返回格式为json
+        async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+        data: map,    //参数值
+        type: "post",   //请求方式
+        success: function (data) {
+            xarray = data.visualizationInfo.xdata;
+            yarray = data.visualizationInfo.ydata;
+            yarray2 = data.visualizationInfo.ydata2;
+            option = data.visualizationInfo.options;
+            xfield=data.visualizationInfo.xfield;
+            yfield=data.visualizationInfo.yfield;
+            yfield2=data.visualizationInfo.yfield2;
+            if(yfield2){
+                yarray2=JSON.parse(yarray2);
+            }
+            xarray=JSON.parse(xarray);
+            yarray=JSON.parse(yarray);
+            option=JSON.parse(option);
+            console.info(yarray);
+            console.info(yarray2);
+            drillflag=data.visualizationInfo.drillflag;
+        },
+        complete: function () {
+            //请求完成的处理
+        },
+        error: function () {
+            //请求出错处理
+        }
+    });
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    //自适应宽高
+    var myChartContainer = function () {
+        document.getElementById('main').style.width = window.innerWidth*0.9 + 'px';
+        //  document.getElementById('main').style.height = window.innerHeight*0.9 + 'px';
+    };
+    myChartContainer();
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    myChartContainer();
+    myChart.resize();
+    if(drillflag=='1'){
+        drillDown();
+    }if(drillflag=='2'){
+        excelDrillDown();
+    }
+    //浏览器大小改变时重置大小
+    window.onresize = function () {
+        myChartContainer();
+        myChart.resize();
+    };
+    var data=[];
+    var columns=[];
+    if(yfield2){
+        columns = [{
+            field: 'xdata',
+            title: xfield
+        }, {
+            field: 'ydata',
+            title: yfield
+        },{
+            field: 'ydata2',
+            title: yfield2
+        }];
+    }else{
+        columns = [{
+            field: 'xdata',
+            title: xfield
+        }, {
+            field: 'ydata',
+            title: yfield
+        }];
+    }
+    for(var i=0; i<xarray.length;i ++) {
+        var ydata="";
+        var ydata2="";
+        for(var j=0;j<yarray.length;j++){
+            ydata+=yarray[j][i]+",";
+        }
+        ydata=ydata.substring(0,ydata.length-1);
+        var temp = {
+            xdata: xarray[i],
+            ydata: ydata
+        };
+        if(yfield2){
+            for(var j=0;j<yarray2.length;j++){
+                ydata2+=yarray2[j][i]+",";
+            }
+            ydata2=ydata2.substring(0,ydata2.length-1);
+            temp.ydata2=ydata2;
+        }
+        data.push(temp);
+    }
+    var userLanguage = getCookie("userLanguage");
+    $('#table').bootstrapTable({
+        toolbar: '#toolbar',                //工具按钮用哪个容器
+        locale: !userLanguage||userLanguage =='zh-CN'?'zh-CN':'en-US',     //国际化
+        striped: true,                      //是否显示行间隔色
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        pagination: true,                   //是否显示分页（*）
+        sortable: false,                     //是否启用排序
+        sortOrder: "asc",                   //排序方式
+        sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber:1,                       //初始化加载第一页，默认第一页
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+        search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+        strictSearch: false,
+        searchOnEnterKey: true,
+        showColumns: true,                  //是否显示所有的列
+        showRefresh: true,                  //是否显示刷新按钮
+        minimumCountColumns: 2,             //最少允许的列数
+        clickToSelect: true,                //是否启用点击选中行
+        uniqueId: "ID",							//每一行的唯一标识，一般为主键列
+        showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+        cardView: false,                    //是否显示详细视图
+        detailView: false,                   //是否显示父子表
+        showExport: true,
+        exportTypes: ['json', 'xml', 'csv', 'txt'],
+        columns:columns,
+        data: data
+    });
+
+
+    //模态框显示数据前置
+    $('#addDrillForExcelChart').on('show.bs.modal', function() {
+        $("select.image-picker").imagepicker({
+            hide_select : true
+        });
+    });
+
+    //根据数据源添加下钻，用以区别excel导入数据和数据库导入数据
+    $(function() {
+        $("#drill").click(function() {
+            if (sourceType == 0) {
+                showChart();
+                $("#addDrillForExcelChart").modal();
+            } else {
+                $("#addDrill").modal();
+            }
+        });
+    });
+
+
+    //excel导入数据添加下钻时选择的图形列表
+    function showChart() {
+        $.ajax({
+            url: SERVER_URL + "/visualization/visualization/selectVisualizationInfos",    //请求的url地址
+            dataType: "json",   //返回格式为json
+            async: false,		//请求是否异步，默认为异步，这也是ajax重要特性
+            type: "post",   	//请求方式
+            success: function (result) {
+                allimgs = result.visualizationInfos;
+                var htmlstr = '';
+                htmlstr = htmlstr+"<div class=\"picker\">\n" +
+                    "                    <select id = \"mySelectChartDrill\"  class=\"image-picker\">";
+                for(var i = 0;i<allimgs.length;i++){
+                    htmlstr = htmlstr + "<option data-img-src="+"'"+$.base64.atob(allimgs[i].img)+"' value='"+i+"'></option>";
+                }
+                htmlstr = htmlstr + "</select>\n" +
+                    "                </div>";
+                $("#imgpicker").empty();
+                $("#imgpicker").html(htmlstr);
+            },
+            complete: function () {
+            },
+            error: function () {
+            }
+        });
+    }
+
+    //excel数据确认下钻按钮，选择图表进行下钻
+    function confirmDrillForExcelData() {
+        var index = $("select").val();
+        var type = allimgs[index].type;   //选择下钻的图表的类型
+        drillvisualizationid = allimgs[index].visualizationid; //选择下钻的图表的id
+        drilloption=allimgs[index].options;
+		drilloption=JSON.parse(drilloption);
+        excelDrillDown();
+        drillflag='2';//excel下钻
+        $('#addDrillForExcelChart').modal('hide');
+    }
+
+    //excel数据下钻函数
+    function excelDrillDown(){
+        if(visualizationid){
+            $.ajax({
+                url: SERVER_URL+'/visualization/visualization/selectVisualizationdrillInfoByCond', // 跳转到 action
+                data: {
+                    "cond.visualizationid":visualizationid
+                },
+                async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+                type: 'post',
+                cache: false,
+                dataType: 'json',
+                timeout: 60000,
+                success: function(data) {
+                    if(data.visualizationdrillInfos){
+                        drillvisualizationid = data.visualizationdrillInfos[0].visualizationid;
+                        drilloption	= data.visualizationdrillInfos[0].drilloptions;
+						drilloption=JSON.parse(drilloption);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert("未知错误，保存失败");
+                }
+            });
+        }
+        myChart.on('click',function(object){
+            // 销毁之前的echarts实例
+            echarts.dispose(document.getElementById('main'));
+            var myChart = echarts.init(document.getElementById('main'));
+            myChart.setOption(drilloption, true);
+            div.setAttribute("style","display:none");
+            returndiv.setAttribute("style","margin-top: 20px;");
+        });
+    }
+
+    //点击下钻后返回按钮
+    $('#return-button').on('click',function(){
+        echarts.dispose(document.getElementById('main'));
+        myChart = echarts.init(document.getElementById('main'));
+        myChart.setOption(option,true);
+        if(drillflag=='2'){
+            excelDrillDown();
+        }else{
+            drillDown();
+        }
+        if(visualizationid ==''||visualizationid==null||visualizationid==undefined){
+            div.setAttribute("style","margin-top: 20px;");
+        }
+        returndiv.setAttribute("style","display:none");
+    });
+
+
+    $('#addDrill').on('show.bs.modal', function(event) {
+        $('#sqlform').get(0).reset();
+        $("#xfield").empty();
+        $("#associated").empty();
+        $("#yfield").empty();
+        $('#yfield').multiselect("destroy").multiselect({
+            buttonClass : 'btn',
+            buttonWidth : 'auto',
+            buttonText : function(options) {
+                if (options.length == 0) {
+                    return $.i18n.prop('selectData');
+                } else {
+                    var selected = '';
+                    options.each(function() {
+                        selected += $(this).text() + ',';
+                    });
+                    return selected.substr(0, selected.length - 1);
+                }
+            },
+            nonSelectedText : $.i18n.prop('selectData'),
+            enableFiltering : true,
+            allSelectedText : $.i18n.prop('allselect'),
+            enableClickableOptGroups : true,
+            enableCollapsibleOptGroups : true,
+            includeSelectAllOption : true,
+            dropRight : true,
+        });
+    });
+</script>
+<!--瀑布流布局插件-->
+<script src="./js/jquery.masonry.min.js" type="text/javascript"></script>
+<!--图片选择器插件-->
+<script src="./js/image-picker.min.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta id="i18n_pagename" content="common">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>数据可视化-选择分类</title>
+
+    <!-- Bootstrap -->
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"  >
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css"  >
+    <link rel="stylesheet" href="./css/bootstrapValidator.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="css/bootstrap-table.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-select.min.css">
+    <link href="css/bootstrap-editable.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <script src="i18n/jquery.i18n.properties.js"></script>
+    <script src="i18n/language.js"></script>
+    <script src="js/bootstrap-table.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Latest compiled and minified Locales -->
+    <script src="js/bootstrap-table-export.js"></script>
+    <script src="js/table-export.js"></script>
+    <script src="./js/bootstrapValidator.min.js"></script>
+    <script src="js/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="js/bootstrap-table-editable.js"></script>
+    <script src="js/bootstrap-editable.js"></script>
+    <script src="js/dist/cpexcel.js"></script>
+    <script src="js/shim.js"></script>
+    <script src="js/jszip.js"></script>
+    <script src="js/xlsx.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="./js/common.js"></script>
+    <script src="./js/role.js"></script>
+    <script src="./js/bootstrap-select.min.js"></script>
+    <script src="js/datasource.js"></script>
+    <script src="js/layer/layer.js"></script>
+    <script src="./js/jquery.editable-select.js"></script>
+    <link rel="stylesheet" href="css/box.css">
+    <link rel="stylesheet"  href="./css/jquery.editable-select.css" />
+    <style type="text/css">
+        .myOwnDdl{
+            display:inline-block;
+            width:100%;
+        }
+
+        /* 实现宽度自定义 */
+        .myOwnDdl .btn-group{
+            width:100%;
+        }
+        .myOwnDdl .multiselect {
+            width:100%;
+            text-align:right;
+            margin-top:-5px;
+        }
+        .myOwnDdl ul {
+            width:100%;
+        }
+        .myOwnDdl .multiselect-selected-text {
+            position:absolute;
+            left:0;
+            right:25px;
+            text-align:left;
+            padding-left:20px;
+        }
+
+        /*控制隔行换色*/
+        .myOwnDll .multiselect-container li.odd {
+            background: #eeeeee;
+        }
+
+        /*数据源信息标签控制*/
+        .bannedclick{
+            pointer-events: none;
+        }
+        #drop{
+            border:2px dashed #bbb;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            border-radius:5px;
+            padding:25px;
+            text-align:center;
+            font:20pt bold,"Vollkorn";color:#bbb
+        }
+        #b64data{
+            width:100%;
+        }
+
+
+        table.altrowstable {
+            font-family: verdana,arial,sans-serif;
+            font-size:11px;
+            color:#333333;
+            width:100%;
+            border-width: 1px;
+            border-color: #ddd;
+            border-collapse: collapse;
+        }
+        table.altrowstable th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #ddd;
+        }
+        table.altrowstable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #ddd;
+        }
+        .oddrowcolor{
+            background-color:#FFFFFF;
+        }
+        .evenrowcolor{
+            background-color:#F5F5F5;
+        }
+        .div-left{width:300px;height:120px;border:1px solid #000;float:left}
+    </style>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="lan" align="right" style="margin-top: 10px">
+        <select id="language">
+            <option value="zh-CN">中文简体</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    <div class="row clearfix" style="margin-top: 20px">
+        <div class="col-xs-3 column">
+            <a class="btn btn-default btn-sm"  id="adddataconnbutton" style="margin-right: 10px;background:transparent;color:#777777" data-toggle="modal"  href="#adddataconn">
+                <i class="fa fa-plus i18n" name="addConnection"></i> </a>
+            <div style="height: auto;width: auto" ><table id="table" ></table></div>
+
+        </div>
+        <div class="col-xs-7 column">
+            <div class="tabbable" id="tabs">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#panel-jbxx" class="i18n" name="basicInformation" data-toggle="tab"></a>
+                    </li>
+                    <li id="dsyuanxinxi" class="bannedclick">
+                        <a href="#panel-bxx" class="i18n" name="datasourceInfomation" data-toggle="tab"></a>
+                    </li>
+                    <li id="permissions" class="bannedclick">
+                        <a href="#panel-permissions" class="i18n" name="permissionInformation" data-toggle="tab"></a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="panel-jbxx">
+                        <div id="tipsxxx">
+                            <img src="img/添加数据源tips.png">
+                        </div>
+                        <!--数据源模版-->
+                        <div id="dsmb" style="display: none;">
+                            <form role="form" id="dsform" method="post" >
+                                <div class="form-group">
+                                    <label for="DataSource" class="i18n" name="datasourceName"></label><input class="form-control" name="DataSource" id="DataSource"  />
+                                </div>
+                                <div class="form-group">
+                                    <label for="dataip" class="i18n" name="serverIp" ></label><input class="form-control" name="dataip" id="dataip" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="port" class="i18n" name="Port"></label><input class="form-control" name="port" id="port"  />
+                                </div>
+                                <div class="form-group">
+                                    <label for="username" class="i18n" name="Username"></label><input class="form-control" name="username" id="username" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="i18n" name="Password"></label><input type="password" class="form-control" name="password" id="password" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="dbname" class="i18n" name="Dbname"></label><input class="form-control" name="dbname" id="dbname" />
+                                </div>
+                                <a class="btn btn-default btn-sm" id="connbutton"  onclick="getconn()" style="margin-right: 10px;background:transparent;color:#777777" href="#">
+                                    <i class="glyphicon glyphicon-check i18n" name="confirm"></i></a>
+                            </form>
+                        </div>
+
+                        <!--excel数据源模版-->
+                        <div id="exceldsmb" style="display: none;">
+                            <!--excel-->
+                            <form role="form" id="exceldsform">
+                                <div class="form-group">
+                                    <label for="excelsource" class="i18n" name="datasourceName" ></label><input class="form-control" name="excelsource"  id="excelsource" />
+                                </div>
+                                <pre id="excelpre">
+									<div id="drop" class="i18n" name="drag"></div>
+									<input type="button" id="choosefile" value="选择文件" onclick="document.getElementById('xlf').click()" style="float: left"><span id="filename" style="float: left">请选择文件</span><input type="file" name="xlfile" id="xlf" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display:none;"  onChange="changeText(this)">
+									<input type="checkbox" style="display: none" name="useworker" checked>
+									<input type="checkbox" style="display: none" name="userabs" checked>
+									<div id="htmlout"></div>
+								</pre>
+                                <div id="exceldiv">
+                                    <table id="exceltable"></table>
+                                </div>
+                                <a class="btn btn-default btn-sm" id="excelsave"  onclick="saveexceldata()" style="margin-right: 10px;background:transparent;color:#777777" href="#">
+                                    <i class="glyphicon glyphicon-check i18n" name="confirm"></i> </a>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="panel-bxx">
+                        <div id="div" align="left" style="margin-top: 20px;">
+                            <a class="btn btn-default btn-sm"  id="addsource" style="margin-right: 10px;background:transparent;color:#777777" data-toggle="modal"  onclick="querytable()"  href="#addDrill">
+                                <i class="fa fa-plus i18n" name="addDataSource"></i> </a>
+                        </div>
+                        <div id="shujuyuantable">
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="panel-permissions">
+                        <iframe id="iframe" src="" scrolling="yes"  onload="this.height=document.body.clientHeight+'px'"  frameborder="0" height="100%"  width="100%" ></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addDrill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin: 100px;width: auto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" onclick="closemodal1()" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title i18n" name="addDataSource" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="sqlform">
+                        <div class="form-group">
+                            <label for="datasourcename" class="i18n" name="datasourceName"></label><input class="form-control" name="datasourcename" id="datasourcename" />
+                        </div>
+                        <!--<div class="myOwnDdl">-->
+                        <!--<label for="name"  >表名</label>-->
+                        <!--<select id="tablesbyinstancename" multiple="multiple" class="form-control" name="tablesbyinstancename">-->
+                        <!--<option></option>-->
+                        <!--</select>-->
+                        <!--<div>-->
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label i18n" name="sqlassistant"></label>
+                            <div class="col-sm-4">
+                                <select  id="sql" class="selectpicker" onchange="selecttable(this)" data-live-search="true">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <select id="column" class="selectpicker" multiple data-live-search="true" ></select>
+                            </div>
+                            <a class="btn btn-default btn-sm" style="margin-right: 10px;background:transparent;color:#777777" onclick="addtable()">
+                                <i class="fa fa-plus"></i> </a>
+                        </div>
+                        <div class="form-group" id="where">
+                            <label for="sqlstr" style="" class="i18n" name="sqlstrs"></label>
+                            <textarea class="form-control"  rows="3"  id="sqlstr" name="sqlstr"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="sqlstr" class="i18n" name="builtin" ></label>
+                            <input class="form-control"  id="builtinconditions" name="sqlstr"></textarea>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default btn-sm" id="yulan"  style="margin-right: 10px;background:transparent;color:#777777" data-toggle="modal" onclick="yulansqlbytable()" href="#">
+                        <i class="glyphicon glyphicon-inbox i18n" name="preview"></i></a>
+                    <a class="btn btn-default btn-sm" onclick="closemodal1()" style="margin-right: 10px;background:transparent;color:#777777" href="#">
+                        <i class="	glyphicon glyphicon-remove i18n" name="close"></i></a>
+                    <a class="btn btn-default btn-sm" onclick="savedatasorce()" style="margin-right: 10px;background:transparent;color:#777777" href="#">
+                        <i class="glyphicon glyphicon-ok i18n" name="confirm"></i></a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+
+
+
+
+</div>
+</div>
+
+<!--预览模态框-->
+<div class="modal fade" id="yulanmoban" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" style="height: auto;width: auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="closemodal2()" aria-hidden="true">&times;</button>
+                <h4 class="modal-title i18n" name="preview" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <table id="yulantable" ></table>
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<!--模态框 查看字段别名-->
+<div class="modal fade" id="aliasModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" style="height: auto;width: auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="closemodal3()" aria-hidden="true">&times;</button>
+                <h4 class="modal-title i18n" name="preview" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <table id="aliasTable" ></table>
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<!--选择数据源模态框-->
+<div class="modal fade" id="adddataconn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title i18n" name="chooseDataSource" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-6">
+
+                    <a class="panel-body" align="center">
+                        <a href="#" onclick="excelds()"><img src="img/Excelico.jpg" class="img-rounded" height=200 width=200 alt="Excel"></a>
+
+
+                </div>
+                <div class="col-xs-6">
+
+                    <div class="panel-body" align="center">
+                        <a href="#"  onclick="mysqlds()"><img src="img/MySQLico.jpg" class="img-rounded" height=200 width=200 alt="MySQL"></a>
+                    </div>
+
+                </div>
+                <div class="col-xs-6">
+
+                    <div class="panel-body" align="center">
+                        <a href="#"  onclick="oracleds()"><img src="img/Oracleico.jpg" class="img-rounded" height=200 width=200 alt="Oracle"></a>
+                    </div>
+
+                </div>
+                <div class="col-xs-6">
+
+                    <div class="panel-body" align="center">
+                        <a href="#"  onclick="sqlserverds()"><img src="img/sqlserver.jpg" class="img-rounded" height=200 alt="SQL Server"></a>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default btn-sm" data-dismiss="modal" style="margin-right: 10px;background:transparent;color:#777777" href="#">
+                    <i class="	glyphicon glyphicon-remove i18n" name="close"></i></a>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<script type="text/javascript">
+    var connectionid='';
+    var exceldata='';
+    var tab=0;
+    var connectiontype ='';
+    var datadetailInfos=[];
+    <!--数据连接信息表格-->
+    var shujuyuantables = [];
+    var tables=[];
+    var id=0 //添加表列的次数
+    $('#addDrill').on('show.bs.modal',function (event) {
+        addtablelist();
+    });
+    $(function(){
+        //excel上传按钮的中英文切换
+        document.getElementById("choosefile").value = $.i18n.prop('chooseExcel');
+        document.getElementById("filename").innerHTML = $.i18n.prop('choosetips');
+        createtable();
+        $("#sqlstr").attr('placeholder',$.i18n.prop('promptconditions'));
+        document.onkeydown = function(event) {
+            var target, code, tag;
+            if (!event) {
+                event = window.event; //针对ie浏览器
+                target = event.srcElement;
+                code = event.keyCode;
+                if (code == 13) {
+                    tag = target.tagName;
+                    if (tag == "INPUT") { return true; }
+                    else { return false; }
+                }
+            }
+            else {
+                target = event.target; //针对遵循w3c标准的浏览器，如Firefox
+                code = event.keyCode;
+                if (code == 13) {
+                    tag = target.tagName;
+                    if (tag == "INPUT") { return false; }
+                    else { return true; }
+                }
+            }
+        };
+
+        $('#dsform').bootstrapValidator({
+            live:'enabled',
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                dbname: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('dbnamemessage')
+                        }
+                    }
+                },
+                dataip: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('dataipmessage')
+                        }
+                    }
+                },
+                port: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('portmessage')
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: $.i18n.prop('portnumbermessage')
+                        }
+                    }
+                },
+                username: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('usernamemessage')
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('passwordmessage')
+                        }
+                    }
+                },
+                DataSource: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('datasourcemessage')
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#exceldsform').bootstrapValidator({
+            live:'enabled',
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                excelsource: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('datasourcemessage')
+                        }
+                    }
+                }
+
+            }
+
+        });
+
+        $('#sqlform').bootstrapValidator({
+            live:'enabled',
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                datasourcename: {
+                    validators: {
+                        notEmpty: {
+                            message: $.i18n.prop('datasourcemessage')
+                        }
+                    }
+                }
+            }
+
+        });
+
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // 获取已激活的标签页的名称
+            var activeTab = $(e.target).text();
+            if(activeTab=='数据源信息'||activeTab=='Data source information'){
+                tab=1;
+                if(connectiontype=='excel'){
+                    document.getElementById("addsource").setAttribute("style","display:none");
+                }else{
+                    document.getElementById("addsource").setAttribute("style","margin-right: 10px;background:transparent;color:#777777");
+                }
+                $('#adddataconnbutton').addClass('bannedclick');
+                shujuyuantable()
+            }else if(activeTab=='权限信息'||activeTab=='Permission information'){
+                tab=1;
+                $('#adddataconnbutton').addClass('bannedclick');
+            }else{
+                tab=0;
+                $('#adddataconnbutton').removeClass('bannedclick');
+            }
+        });
+    });
+
+    //查看条件
+    function showshujuyuanbysql(querySql){
+        layer.alert(querySql);
+    }
+
+    $('#yulanmoban').on('show.bs.modal', function (e) {
+
+
+    })
+
+    var X = XLSX;
+    var XW = {
+        /* worker message */
+        msg: 'xlsx',
+        /* worker scripts */
+        worker: './js/xlsxworker.js'
+    };
+
+    var global_wb;
+
+    var process_wb = (function() {
+        var HTMLOUT = document.getElementById('htmlout');
+        var to_html = function to_html(workbook) {
+            HTMLOUT.innerHTML = "";
+            workbook.SheetNames.forEach(function(sheetName) {
+                if(global_wb.Sheets[sheetName]['!ref']==undefined){return false;}
+                var htmlstr = X.write(workbook, {sheet:sheetName, type:'binary', bookType:'html'});
+                HTMLOUT.innerHTML += htmlstr;
+            });
+            altRows('alternatecolor');
+            return "";
+        };
+        var to_csv = function to_csv(workbook) {
+            var result = [];
+            exceldata='';
+            workbook.SheetNames.forEach(function(sheetName) {
+                var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+                if(csv){
+                    exceldata += csv;
+                }
+            });
+            return result.join("\n");
+        };
+
+
+
+
+        return function process_wb(wb) {
+            global_wb = wb;
+            var output = "";
+            to_html(wb);
+            to_csv(wb);
+        };
+    })();
+
+    var setfmt = window.setfmt = function setfmt() { if(global_wb) process_wb(global_wb); };
+
+    var b64it = window.b64it = (function() {
+        var tarea = document.getElementById('b64data');
+        return function b64it() {
+            if(typeof console !== 'undefined') console.log("onload", new Date());
+            var wb = X.read(tarea.value, {type:'base64', WTF:false});
+            process_wb(wb);
+        };
+    })();
+
+    var do_file = (function() {
+        var rABS = typeof FileReader !== "undefined" && (FileReader.prototype||{}).readAsBinaryString;
+        var domrabs = document.getElementsByName("userabs")[0];
+        if(!rABS) domrabs.disabled = !(domrabs.checked = false);
+
+        var use_worker = typeof Worker !== 'undefined';
+        var domwork = document.getElementsByName("useworker")[0];
+        if(!use_worker) domwork.disabled = !(domwork.checked = false);
+
+        var xw = function xw(data, cb) {
+            var worker = new Worker(XW.worker);
+            worker.onmessage = function(e) {
+                switch(e.data.t) {
+                    case 'ready': break;
+                    case 'e': console.error(e.data.d); break;
+                    case XW.msg: cb(JSON.parse(e.data.d)); break;
+                }
+            };
+            worker.postMessage({d:data,b:rABS?'binary':'array'});
+        };
+
+        return function do_file(files) {
+            rABS = domrabs.checked;
+            use_worker = domwork.checked;
+            var f = files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                if(typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+                var data = e.target.result;
+                if(!rABS) data = new Uint8Array(data);
+                if(use_worker) xw(data, process_wb);
+                else process_wb(X.read(data, {type: rABS ? 'binary' : 'array'}));
+            };
+            if(rABS) reader.readAsBinaryString(f);
+            else reader.readAsArrayBuffer(f);
+        };
+    })();
+
+    //这是拖动解析Excel
+    (function() {
+        var drop = document.getElementById('drop');
+        if(!drop.addEventListener) return;
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            do_file(e.dataTransfer.files);
+            //经过打印这个对象可以一层层的看到解析出文件名的属性
+            //console.log(e.dataTransfer.files[0].name);
+            //将解析出的文件名填到对应的文本里
+            var filename = document.getElementById("filename"); var exist = e.dataTransfer.files[0].name.lastIndexOf("\\");
+            if(exist == -1){ filename.textContent = e.dataTransfer.files[0].name; }
+            else{ filename.textContent = e.dataTransfer.files[0].name.substring(exist + 1); }
+        }
+
+        function handleDragover(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+
+        drop.addEventListener('dragenter', handleDragover, false);
+        drop.addEventListener('dragover', handleDragover, false);
+        drop.addEventListener('drop', handleDrop, false);
+    })();
+
+    //这是上传解析Excel
+    (function() {
+        var xlf = document.getElementById('xlf');
+        if(!xlf.addEventListener) return;
+        function handleFile(e) { do_file(e.target.files);}
+        xlf.addEventListener('change', handleFile, false);
+    })();
+
+    function selecttable(obj,position){
+        if(obj.value!=''){
+            var querySql ="select * from "+obj.value;
+            $.ajax({
+                url: SERVER_URL + "/visualization/core/selectColumns",    //请求的url地址
+                dataType: "json",   //返回格式为json
+                async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+                data: {"cond.connectionid":connectionid,"cond.querySql":querySql},
+                type: "post",   //请求方式
+
+                success: function (result) {
+                    var select;
+                    if(position){
+                        select = $("#column"+position);
+                    }else{
+                        select = $("#column");
+                    }
+                    select.empty();
+                    $.each(result.columns, function(key, value) {//拼接option
+                        select.append("<option>"+value+"</option>");
+                    });
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                complete: function () {
+
+                },
+                error: function () {
+                }
+            });
+        }
+    }
+    function addtable(){
+        id++;
+        var div="<div class=\"form-group\" id=\"table"+id+"\"> <div class=\"col-sm-2\"> </div><div class=\"col-sm-4\">"+
+            "<select id=\"sql"+id+"\" class=\"selectpicker\" onchange=\"selecttable(this,"+id+")\" data-live-search=\"true\">"+
+            "<option></option></select> </div><div class=\"col-sm-4\"><select id=\"column"+id+"\" class=\"selectpicker\" multiple data-live-search=\"true\"></select>"+
+            "</div><a class=\"btn btn-default btn-sm\" style=\"margin-right: 10px;background:transparent;color:#777777\" id='id"+id+"' onclick=\"addtable()\"><i class=\"fa fa-plus\"></i> </a>"+
+            "<a class=\"btn btn-default btn-sm\" style=\"margin-right: 10px;background:transparent;color:#777777\" id='delete"+id+"' onclick=\"deletetable("+id+")\"><i class=\"fa fa-minus\"></i> </a></div>"
+
+        $("#where").before(div)
+        addtablelist()
+    }
+    function deletetable(position){
+        $("#table"+position).remove();
+    }
+    function addtablelist(){
+        $(".selectpicker").selectpicker({
+            noneSelectedText : '请选择'//默认显示内容
+        });
+        var select;
+        if(id==0){
+            select = $("#sql");
+        }else{
+            select = $("#sql"+id);
+        }
+        $.each(tables, function(key, value) {//拼接option
+            select.append("<option>"+value+"</option>");
+        });
+        $('.selectpicker').selectpicker('refresh');
+    }
+
+    //上传Excel解析文件名
+    function changeText(th){ var filename = document.getElementById("filename"); var exist = th.value.lastIndexOf("\\");
+        if(exist == -1){ filename.textContent = th.value; }
+        else{ filename.textContent = th.value.substring(exist + 1); } }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+@charset "utf-8";
+/* thumbnails */
+ul.thumbnails.image_picker_selector{overflow:auto;list-style-image:none;list-style-position:outside;list-style-type:none;padding:0px;margin:0px;}
+ul.thumbnails.image_picker_selector li{margin:5px 5px 5px 5px; float:left;height: 250px;width:280px}
+ul.thumbnails.image_picker_selector li .thumbnail{padding:4px;border:1px solid #dddddd;height: 250px;width:280px}
+ul.thumbnails.image_picker_selector li .thumbnail.selected{border:3px solid #2f3238;}
