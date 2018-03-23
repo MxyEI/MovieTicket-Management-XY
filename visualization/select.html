@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta id="i18n_pagename" content="common">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>数据可视化-图表选择</title>
+
+		<!-- Bootstrap -->
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="./css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css"/>
+		<link rel="stylesheet" href="./css/bootstrap-multiselect.css">
+		<script src="./js/jquery.min.js"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="./js/bootstrap.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="./js/common.js"></script>
+		<script src="./js/layer/layer.js"></script>
+		<script src="./js/select.js"></script>
+		<script src="i18n/jquery.i18n.properties.js"></script>
+	    <script src="i18n/language.js"></script>
+		<script src="./js/bootstrap-multiselect.js"></script>
+		<script src="./js/jquery.editable-select.js"></script>
+		<link rel="stylesheet"  href="./css/jquery.editable-select.css" />
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="./js/html5shiv.min.js"></script>
+      <script src="./js/respond.min.js"></script>
+    <![endif]-->
+	<style type="text/css">
+		/*自定义宽度*/  
+			.myOwnDdl{  
+				display:inline-block;  
+				width:100%;  
+			}  
+			  
+			/* 实现宽度自定义 */  
+			.myOwnDdl .btn-group{  
+				width:100%;  
+			}  
+			.myOwnDdl .multiselect {  
+				width:100%;  
+				text-align:right;  
+				margin-top:-5px;  
+			}  
+			.myOwnDdl ul {  
+				width:100%;  
+			}  
+			.myOwnDdl .multiselect-selected-text {  
+				position:absolute;  
+				left:0;  
+				right:25px;  
+				text-align:left;  
+				padding-left:20px;  
+			}  
+			  
+			/*控制隔行换色*/  
+			.myOwnDll .multiselect-container li.odd {  
+				background: #eeeeee;  
+			}  
+			
+			/*可编辑下拉框样式editable-select*/
+			.editable-select {
+				border-radius: 5px;
+				width:auto;
+			}
+			
+			.editSelect{
+				display: block;
+				width: 98%;
+				height: 34px;
+				padding: 6px 12px;
+				font-size: 14px;
+				line-height: 1.42857143;
+				color: #555;
+				background-color: #fff;
+				background-image: none;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+				box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+				-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow
+					ease-in-out .15s;
+				-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out
+					.15s;
+				transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+			}
+	</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="row" style="margin-top: 10px;">
+				<div class="col-xs-12" style="box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;">
+					<form id="sqlform" role="form">
+					<div class="form-group"></div>
+						<div class="form-group">
+							<label for="name"  class="i18n" name="chooseDataSource"></label>
+							<select id="selectpicker" name="sourcename">
+							<option class="i18n" name="choose"></option>
+							</select>
+							<label for="name" class="i18n" name="choosechartype"></label>
+							<select  name="type" onchange="selecttypeOnchang(this)" id="chartype">
+								<option value="bar" class="i18n" name="bar"></option>
+								<option value="pie" class="i18n" name="pie"></option>
+								<option value="line" class="i18n" name="line"></option>
+								<option value="gauge" class="i18n" name="gauge"></option>
+								<option value="funnel" class="i18n" name="funnel"></option>
+								<option value="rose" class="i18n" name="rose"></option>
+								<option value="radar" class="i18n" name="radar"></option>
+								<option value="scatter" class="i18n" name="scatter"></option>
+								<option value="k" class="i18n" name="candlestick"></option>
+								<option value="map"  class="i18n"  name="chinamap"></option>
+								<option value="heatmap"  class="i18n"  name="heatmap"></option>
+							</select>
+							<label for="name"  class="i18n" name="whetherassociated"></label>
+							<select  name="classificationtype" onchange="selectOnchang(this)">
+								<option value="0" class="i18n" name="no"></option>
+								<option value="1" class="i18n" name="yes"></option>
+							</select>
+						</div>
+
+						<div id="result" class="form-group"></div>
+						<div class="form-group" id="inconditions" style="display: none;">
+							<label for="sqlstr" style="" >内置条件</label>
+							<input class="form-control"  id="builtinconditions" name="sqlstr"></textarea>
+						</div>
+						<div  class="myOwnDdl">
+							<label for="name" id="xdescribe" class="i18n" name="xaxis"></label>
+							<select  id="xfield" name="xfield" class="form-control" >
+								<option></option>
+							</select>
+						</div>
+						<div  class="myOwnDdl" >
+							<label for="name" id="ydescribe" class="i18n" name="yaxis"></label>
+							<select class="form-control" id="yfield" name="yfield" >
+								<option></option>
+							</select>
+						</div>
+						<div  class="myOwnDdl" id="ydescribe2" style="display: none;">
+							<label for="name" class="i18n" name="maxvalue"  id="yaxis2"></label>
+							<select class="form-control" id="yfield2" name="yfield2" >
+								<option></option>
+							</select>
+						</div>
+						
+						
+						<div class="form-group col-md-offset-8" style="margin-top: 10px;">
+							<a class="btn btn-default btn-sm" onclick="show()" style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+								<i class="glyphicon glyphicon-inbox i18n" name="preview"></i></a>	
+							<a class="btn btn-default btn-sm" onclick="doback()" style="margin-right: 10px;background:transparent;color:#777777"  href="#">
+								<i class="fa fa-mail-reply i18n" name="doback"></i></a>	
+						</div>
+					</form>
+				</div>
+				<div id="content" class="col-xs-12 column" style="box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;margin-top: 10px;display: none;">
+					<div class="col-xs-12 column" style="margin-top: 20px;">
+						<div class="col-xs-12 column">
+							<div class="panel panel-default">
+								<div class="panel-heading i18n" name="previewChart">
+								</div>
+								<div class="panel-body" align="center" style="min-height: 500px;">
+									<iframe id="iframe" src="" scrolling="yes" frameborder="0" height="100%"  width="100%" style="min-height: 500px;"></iframe>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<script>
+			var sourceType = 0;  //区分数据源是否为excel，1是excel数据
+			var dataarr =[];
+			var builtinconditions="";
+			$(document).ready(function() {
+				window.moveTo(0, 0);
+				window.resizeTo(screen.availWidth, screen.availHeight);
+				getLayerLoad("selectpicker");
+				//$("#content").css("display","none");
+			});
+			
+
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta id="i18n_pagename" content="common">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title></title>
+		<!-- Bootstrap -->
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="./css/bootstrap.min.css"  >
+		<link rel="stylesheet" href="css/font-awesome.min.css"/>
+
+		<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+		<link rel="stylesheet" href="./css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="./css/box.css">
+		<link href="./css/fileinput.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>  
+    <![endif]-->
+	</head>
+
+	<body>
+		<div class="container-fluid">
+			<div class="lan" align="right" style="margin-top: 10px">
+				<select id="language">
+					<option value="zh-CN">中文简体</option>
+					<option value="en">English</option>
+				</select>
+			</div>
+			<div class="row" style="margin-bottom: 10px;margin-top: 20px">
+				<div id="result" class="col-xs-12 column">
+					<div  class="col-xs-3">
+					<div class="panel panel-info">
+						<div class="panel-heading"  style=" background:transparent;">
+							<h3 class="panel-title i18n" name="addchart"></h3>
+						</div>
+						<div class="panel-body" align="center">
+							<a href="select.html">
+								<img src="img/add1.png"  class="img-rounded img-responsive" alt="添加图表" style="width: 220px;height: 200px">
+							</a>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="addCategory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			
+		</div>
+
+		<!--去除编辑分类模态框-->
+		<!--<div class="modal fade" id="editCategory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+			<!--<div class="modal-dialog">-->
+				<!--<div class="modal-content">-->
+					<!--<div class="modal-header">-->
+						<!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+						<!--<h4 class="modal-title" id="myModalLabel">编辑分类</h4>-->
+					<!--</div>-->
+					<!--<div class="modal-body">-->
+						<!--<form id="image" id="uploadForm" role="form" enctype="multipart/form-data" action="www.hao123.com">-->
+							<!--<div class="form-group">-->
+								<!--<label for="name" style="margin: 5px;">分类名称</label>-->
+								<!--<input type="text" class="form-control" id="name" placeholder="请输入分类名称">-->
+							<!--</div>-->
+							<!--<div class="form-group">-->
+								<!--<label for="name" style="margin: 5px;">添加封面</label>-->
+								<!--<input id="upload1" name="upload" type="file" class="file-loading">-->
+							<!--</div>-->
+						<!--</form>-->
+					<!--</div>-->
+					<!--<div class="modal-footer">-->
+						<!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
+						<!--<button type="button" class="btn btn-primary" onclick=" $('#upload1').fileinput('upload');" >提交</button>-->
+
+					<!--</div>-->
+				<!--</div>-->
+				<!--&lt;!&ndash; /.modal-content &ndash;&gt;-->
+			<!--</div>-->
+			<!--&lt;!&ndash; /.modal &ndash;&gt;-->
+		<!--</div>-->
+
+		<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content" align="center">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title i18n" name="confirmoperation" id="myModalLabel"></h4>
+					</div>
+					<div class="modal-body i18n" name="confirmdeletion">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default i18n" name="cancel" data-dismiss="modal"></button>
+						<button type="button" class="btn btn-danger i18n" name="confirm" onclick="deleteT()"></button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+		</div>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="./js/jquery.min.js"></script>
+		<script src="js/jquery.base64.js"></script>
+		<script src="i18n/jquery.i18n.properties.js"></script>
+		<script src="i18n/language.js"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="./js/bootstrap.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="./js/common.js"></script>
+		<script src="./js/fileinput.js"></script>
+		<script src="./js/category.js"></script>
+		<script src="./js/fileinput_locale_zh.js"></script>
+		<script>
+			var dataarr =[];
+			$(document).ready(function() {
+				//初始化fileinput控件（第一次初始化）				
+				initFileInput1("upload1");
+				createShowing();
+			});
+		</script>
+		<script src="js/layer/layer.js"></script>
+    </body>
+</html>

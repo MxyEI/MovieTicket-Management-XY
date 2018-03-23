@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta id="i18n_pagename" content="common">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css"/>
+
+	<link rel="stylesheet" href="./dist/gridstack.css"/>
+	<link rel="stylesheet" type="text/css" href="css/dashboard.css">
+	<link rel="stylesheet" href="css/smartMenu.css"/>
+
+
+
+	<!--<link href="css/site.css" rel="stylesheet" type="text/css">-->
+	<!--必要文件-->
+	<link rel="stylesheet" type="text/css" href="css/image-picker.css">
+	<link rel="stylesheet" type="text/css" href="css/examples.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="i18n/jquery.i18n.properties.js"></script>
+	<script src="i18n/language.js"></script>
+	<link rel="stylesheet" href="css/box.css">
+	<style type="text/css">
+		body {
+			padding-top: 50px;
+			padding-left: 50px;
+		}
+
+		.inputcolor{
+			background-color: #222;
+			color: white;
+			padding: 2px;
+			border: hidden;
+			display: compact;
+
+		}
+
+		li.reply {
+			position: fixed;
+			right:5px;
+		}
+
+		/*选择图表-图片集样式*/
+		.thumbnail > img{
+			height: 100%
+		}
+	</style>
+	<style>
+		ul{
+			list-style: none;
+		}
+		.nav>li{
+			float: left;
+		}
+		.drop-down-content_a{
+			display: block;
+			text-decoration: none;
+			text-align: center;
+			line-height: 50px;
+			color: #9d9d9d;
+			background-color: #222222;
+		}
+		.nav>li:first-child a{
+			border-radius: 10px 0 0 10px;
+		}
+		.nav>li:last-child a{
+			border-radius: 0 10px 10px 0;
+		}
+		.drop-down{
+			/*position: relative;*/
+			height: 50px;
+		}
+		.drop-down-content{
+			padding: 0;
+			opacity: 0.3;
+			height: 0;
+			overflow: hidden;
+			transition: all 1s ease;
+			/*position: absolute;*/
+		}
+
+
+		.drop-down-content li:hover a{
+			text-decoration: none;
+			color: white;
+			background-color:black;
+		}
+		.nav .drop-down:hover .drop-down-content{
+			opacity: 1;
+			height: 150px;
+		}
+
+		textarea{
+			resize:none;
+		}
+		*:focus {outline: none;}
+	</style>
+	<!--[if IE]>
+	<script src="js/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div class="navbar navbar-fixed-top navbar-inverse" id="contanier1" role="navigation">
+	<div class="container-fluid">
+		<div>
+			<ul id="navul" class="nav navbar-nav">
+				<li>
+					<a><input id="context" class="inputcolor"  onblur=" toWrite()" onfocus="myText()"/></a>
+				</li>
+				<li>
+					<a href="#" onclick="save_report()"><span class="fa fa-floppy-o i18n" name="save"></span></a>
+				</li>
+				<li>
+					<a href="#addchart"  data-toggle="modal" onclick="showChart()"><span class="fa-area-chart i18n" name="chart"></span></a>
+				</li>
+				<li>
+					<a href="#" onclick="addwenben()" data-bind="click: add_new_widget"><span class="fa fa-text-width i18n" name="text"></span></a>
+				</li>
+				<li>
+					<a href="#" onclick="toChart()"><span class="fa-inbox i18n" name="preview"></span></a>
+				</li>
+				<li>
+					<a href="#" onclick="toPermission()"><span class="fa-users i18n" name="permissions"></span></a>
+				</li>
+				<li class="drop-down">
+					<a href="#"><span class="fa-arrow-circle-down i18n" name="export"></span></a>
+					<ul class="drop-down-content">
+						<li><a href="#" class="drop-down-content_a i18n" name="exportpictures" onclick="downloadimg()"></a></li>
+						<li><a href="#" class="drop-down-content_a i18n" name="exportpdf" onclick="downloadPDF()"></a></li>
+					</ul>
+				</li>
+				<li class="reply">
+					<a href="report.html"><span class="fa fa-reply i18n" name="quit"></span></a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="contanier2" style="display:none" >
+	<div class="container-fluid">
+		<div>
+			<ul class="nav navbar-nav">
+				<li>
+					<a href="#" onclick="toBack()"><span class="fa fa-reply i18n" name="returnpreview"></span></a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+<div id="contents"   class="jq22-container">
+	<div id="content" class="jq22-content bgcolor-1">
+		<div class="container-fluid">
+			<div  data-bind="component: {name: 'dashboard-grid', params: $data}">
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="img" style="display:none">
+	<img id="imgs" src="" />
+</div>
+
+
+
+
+<template id="gridstack-template">
+	<div id="maincontent" class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">
+		<div id='mains' class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $data.auto_position}">
+			<div style="width:$data.width;height:$data.height" class="grid-stack-item-content" data-bind="click: $root.alert">
+			</div>
+		</div></div>
+</template>
+
+<!--选择数据源模态框-->
+<div class="modal fade" id="addchart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="height: 90%;width: 80%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title i18n" name="chooseChart" id="myModalLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div class="picker" id="imgpicker">
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default i18n" name="close" data-dismiss="modal"></button>
+				<button type="button" class="btn btn-default i18n" name="confirm" data-dismiss="modal" onclick="queren()" data-bind="click: add_new_widget"></button>
+
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
+</div>
+<script>
+    var txt = "";
+    var saveflag=false;
+    var reportid='';
+    function myText() {
+        txt = document.getElementById("fname").value;
+    }
+
+    function toWrite() {
+        var value = $("#id").val();
+        var x = document.getElementById("context").value;
+        if(x == '') {
+            document.getElementById("context").value = $.i18n.prop('unnamedreport');
+        }
+    }
+
+    function downloadPDF() {
+        var shareContent = document.querySelector("#content");
+        var width = shareContent.offsetWidth;
+        var height = shareContent.offsetHeight;
+        var canvas = document.createElement("canvas");
+        var scale = 1;
+        var img2pdf = '';
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        canvas.getContext("2d").scale(scale, scale);
+
+        var opts = {
+            scale: scale,
+            canvas: canvas,
+            logging: true,
+            width: width,
+            height: height,
+            useCORS: true // 【重要】开启跨域配置
+        };
+        html2canvas(shareContent, opts).then(function (canvas) {
+            var context = canvas.getContext('2d');
+
+            // 【重要】关闭抗锯齿
+            context.webkitImageSmoothingEnabled = false;
+            context.msImageSmoothingEnabled = false;
+            context.imageSmoothingEnabled = false;
+
+            //一页pdf显示html页面生成的canvas高度;
+            var pageHeight = canvas.width / 592.28 * 841.89;
+            //未生成pdf的html页面高度
+            var leftHeight = canvas.height;
+            //页面偏移 var position = 0;
+            //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+            var imgWidth = 595.28;
+            var imgHeight = 592.28/canvas.width * canvas.height;
+
+            img2pdf = canvas.toDataURL('image/jpeg',1.0);
+            var doc = new jsPDF('', 'pt', 'a4');
+
+            doc.setFontSize(40);
+            doc.addImage(img2pdf, 'jpeg',0, 0, imgWidth, imgHeight);
+            doc.save('Test.pdf');
+        });
+
+    }
+
+    function downloadimg(){
+        var shareContent = document.querySelector("#content");
+        var width = shareContent.offsetWidth;
+        var height = shareContent.offsetHeight;
+        var canvas = document.createElement("canvas");
+        var scale = 1;
+        var img2pdf = '';
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        canvas.getContext("2d").scale(scale, scale);
+
+        var opts = {
+            scale: scale,
+            canvas: canvas,
+            logging: true,
+            width: width,
+            height: height,
+            useCORS: true // 【重要】开启跨域配置
+        };
+        html2canvas(shareContent, opts).then(function (canvas) {
+            var context = canvas.getContext('2d');
+
+            // 【重要】关闭抗锯齿
+            context.webkitImageSmoothingEnabled = false;
+            context.msImageSmoothingEnabled = false;
+            context.imageSmoothingEnabled = false;
+
+            //一页pdf显示html页面生成的canvas高度;
+            var pageHeight = canvas.width / 592.28 * 841.89;
+            //未生成pdf的html页面高度
+            var leftHeight = canvas.height;
+            //页面偏移 var position = 0;
+            //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+            var imgWidth = 595.28;
+            var imgHeight = 592.28/canvas.width * canvas.height;
+
+            //1.确定图片的类型  获取到的图片格式 data:image/Png;base64,......
+            var type ='jpeg';//你想要什么图片格式 就选什么吧
+
+            var imgdata=canvas.toDataURL(type);
+            //2.0 将mime-type改为image/octet-stream,强制让浏览器下载
+            var fixtype=function(type){
+                type=type.toLocaleLowerCase().replace(/jpg/i,'jpeg');
+                var r=type.match(/png|jpeg|bmp|gif/)[0];
+                return 'image/'+r;
+            };
+            imgdata=imgdata.replace(fixtype(type),'image/octet-stream');
+            //3.0 将图片保存到本地
+            var savaFile=function(data,filename)
+            {
+                var save_link=document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+                save_link.href=data;
+                save_link.download=filename;
+                var event=document.createEvent('MouseEvents');
+                event.initMouseEvent('click',true,false,window,0,0,0,0,0,false,false,false,false,0,null);
+                save_link.dispatchEvent(event);
+            };
+            var filename=''+new Date().getDate()+'.'+type;
+            //注意咯 由于图片下载的比较少 就直接用当前几号做的图片名字
+            savaFile(imgdata,filename);
+        });
+
+
+    }
+
+</script>
+<script type="text/javascript">
+    var allimgs=[];
+    var optionss = [];
+    var j=0;
+    //选择图表的个数
+    var length=0;
+    var click=0;
+    //类型：0面板；1文本
+    var addtype = 0;
+    var bodyMenuData=[];
+    //复制
+    var copywigets = {};
+    $('#addchart').on('show.bs.modal', function () {
+        $("select.image-picker").imagepicker({
+            hide_select:true
+        });
+    });
+    $(function(){
+        if(permissionsflag=='0'){
+            $("#navul")[0].getElementsByTagName("li")[1].style.display = "none"
+            $("#navul")[0].getElementsByTagName("li")[2].style.display = "none"
+            $("#navul")[0].getElementsByTagName("li")[3].style.display = "none"
+            $("#navul")[0].getElementsByTagName("li")[4].style.display = "none"
+            $("#navul")[0].getElementsByTagName("li")[5].style.display = "none"
+        }else if(permissionsflag=='1'){
+            $("#navul")[0].getElementsByTagName("li")[5].style.display = "none"
+        }
+		//禁止浏览器右击事件
+        document.oncontextmenu = function(e){
+            e.preventDefault();
+        };
+        reportid=getUrlParam("reportid");
+        var reportname=decodeURI(getUrlParam("reportname"));
+        if(reportname!=''&&reportname!='null'){
+            $("#context").val(reportname);
+        }else{
+			$("#context").val($.i18n.prop('unnamedreport'));
+		}
+        if(reportid&&reportid!=''){
+            createMenu();
+        }
+		$("#context").attr('placeholder',$.i18n.prop('title'));
+    });
+    function addwenben(){
+        var widgets=[];
+        widgets.push({
+            x: 0,
+            y: 0,
+            width: 4,
+            height: 4,
+            auto_position: true
+        });
+        var controller = new Controller(widgets);
+        if(click==0){
+            ko.applyBindings(controller);
+        }
+        click=1;
+        optionss.push({"option":"","chartid":""
+            ,"visualizationid":"","addtype":1,"textcontent":""});
+        length = 1;
+    }
+</script>
+<!--瀑布流布局插件-->
+<script src="js/jquery.masonry.min.js" type="text/javascript"></script>
+<!--图片选择器插件-->
+<script src="js/image-picker.min.js" type="text/javascript"></script>
+<script src="js/common.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="./js/layer/layer.js"></script>
+<script src="./js/lodash.min.js"></script>
+<script src="./js/knockout-min.js"></script>
+<script src="./js/visualization-menu.js"></script>
+<script src="./dist/gridstack.js"></script>
+<script src="./js/html2canvas.min.js"></script>
+<script src="./js/echarts.js"></script>
+<script src="js/jquery.base64.js"></script>
+<script src="js/canvas2image.js"></script>
+<script  src="js/jquery-smartMenu.js"></script>
+<script  src="js/jspdf.min.js"></script>
+<script src="./map/js/china.js"></script>
+</body>
+</html>
