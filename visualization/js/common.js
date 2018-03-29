@@ -1,5 +1,5 @@
 // var SERVER_URL = getRootPath();
-var SERVER_URL = 'http://127.0.0.1/ireport';
+var SERVER_URL = 'http://localhost:8080';
 var savePath="";
 
 function getRootPath(){

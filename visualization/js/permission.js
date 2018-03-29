@@ -171,7 +171,8 @@ function showRole(){
 		closeBtn: 1,
 		moveOut:true,
 		shadeClose: true,
-		content: SERVER_URL+'/visualization/role.html'+params,
+		//content: SERVER_URL+'/visualization/role.html'+params,
+        content: 'role.html'+params,
 		success:function(){
 			var index = layer.getFrameIndex(window.name);
 			layer.iframeAuto(index);

@@ -311,17 +311,18 @@ function closemodal1(){
     $('#sqlform').bootstrapValidator('resetForm', true);
 
 }
+//保存数据库数据源
 function savedatasorce(){
     var sqlformvali = $("#sqlform").data('bootstrapValidator');
-    $("#sqlform").bootstrapValidator('validate');	
-	var querySql=getsql();
+    $("#sqlform").bootstrapValidator('validate');
+    var querysql=getsql();
     if(sqlformvali.isValid()) {
-		var tablename=$("#sql").val();
-		for(var i=0;i<id;i++){
-			tablename+=","+$("#sql"+id).val();
-		}
+        var tablename=$("#sql").val();
+        for(var i=0;i<id;i++){
+            tablename+=","+$("#sql"+id).val();
+        }
         var vjson={"connectionid":connectionid,"sourcename":$('#datasourcename').val(),
-            "querySql":querySql,"builtinconditions":$('#builtinconditions').val(),"tablename":tablename}
+            "querysql":querysql,"builtinconditions":$('#builtinconditions').val(),"tablename":tablename}
         $.ajax({
             url: SERVER_URL + "/visualization/core/saveDatasourceInfos",    //请求的url地址
             dataType: "json",   //返回格式为json
@@ -341,6 +342,7 @@ function savedatasorce(){
         });
     }
 }
+
 //关闭预览模态框
 function closemodal2() {
     $('#yulanmoban').modal('hide');
