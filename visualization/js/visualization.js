@@ -74,9 +74,11 @@ function exportImage(){
 							shade: 0.8,
 							closeBtn: 1,
 							shadeClose: true,
-							content: SERVER_URL+'/visualization/permission.html?visualizationid='+visualizationid,
+							//content: SERVER_URL+'/visualization/permission.html?visualizationid='+visualizationid,
+                            content: 'permission.html?visualizationid='+visualizationid,
 							cancel :function(){
-								parent.window.location.href=SERVER_URL+"/visualization/category.html";
+								//parent.window.location.href=SERVER_URL+"/visualization/category.html";
+                                parent.window.location.href="category.html";
 							}
 						});
 						//parent.window.location.href=SERVER_URL+"/visualization/category.html";
@@ -93,9 +95,11 @@ function exportImage(){
 					closeBtn: 1,
 					moveOut:true,
 					shadeClose: true,
-					content: SERVER_URL+'/visualization/permission.html?visualizationid='+visualizationid,
+					//content: SERVER_URL+'/visualization/permission.html?visualizationid='+visualizationid,
+                    content: 'permission.html?visualizationid='+visualizationid,
 					cancel :function(){
-						parent.window.location.href=SERVER_URL+"/visualization/category.html";
+						//parent.window.location.href=SERVER_URL+"/visualization/category.html";
+                        parent.window.location.href="category.html";
 					}
 				});
 				//
