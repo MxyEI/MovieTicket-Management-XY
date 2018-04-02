@@ -287,11 +287,11 @@ function save_report() {
                         textcontent=$('#'+main+'')[0].textContent;
                     }
 					reportid=result.reportid;
-                    var cartlocationInfo={
+                    var chartlocationInfo={
                         "chartid":optionss[i].chartid,"reportid":result.reportid,"visualizationid":optionss[i].visualizationid,
                         "xdata":$('#'+mains+'')[0].dataset.gsX,"ydata":$('#'+mains+'')[0].dataset.gsY,"width":$('#'+mains+'')[0].dataset.gsWidth,
                         "height":$('#'+mains+'')[0].dataset.gsHeight,"addtype":optionss[i].addtype,"textcontent":textcontent};
-                    chartlocationInfos.push(cartlocationInfo);
+                    chartlocationInfos.push(chartlocationInfo);
                 }
             }
             $.ajax({
@@ -335,6 +335,7 @@ function createMenu(){
             var chartlocationInfos = result.chartlocationInfos;
             if(chartlocationInfos){
                 var widgets=[];
+                var optionjson = '';
                 for(var i=0;i<chartlocationInfos.length;i++){
                     widgets.push({
                         x: chartlocationInfos[i].xdata,
@@ -343,9 +344,18 @@ function createMenu(){
                         height: chartlocationInfos[i].height,
                         auto_position: false
                     });
-                    optionss.push({"option":JSON.parse(chartlocationInfos[i].options),"chartid":chartlocationInfos[i].chartid
-                        ,"visualizationid":chartlocationInfos[i].visualizationid,"addtype":chartlocationInfos[i].addtype,
-                        "textcontent":chartlocationInfos[i].textcontent});
+                    if(chartlocationInfos[i].options == ''){
+                        optionss.push({"chartid":chartlocationInfos[i].chartid
+                            ,"visualizationid":chartlocationInfos[i].visualizationid,"addtype":chartlocationInfos[i].addtype,
+                            "textcontent":chartlocationInfos[i].textcontent});
+                    }else{
+                        optionss.push({"option":JSON.parse(chartlocationInfos[i].options),"chartid":chartlocationInfos[i].chartid
+                            ,"visualizationid":chartlocationInfos[i].visualizationid,"addtype":chartlocationInfos[i].addtype,
+                            "textcontent":chartlocationInfos[i].textcontent});
+                    }
+                    // optionss.push({"option":JSON.parse(chartlocationInfos[i].options),"chartid":chartlocationInfos[i].chartid
+                    //     ,"visualizationid":chartlocationInfos[i].visualizationid,"addtype":chartlocationInfos[i].addtype,
+                    //     "textcontent":chartlocationInfos[i].textcontent});
                 }
                 click=1;
                 var controller = new Controller(widgets);
