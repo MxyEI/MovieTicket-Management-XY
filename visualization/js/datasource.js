@@ -221,7 +221,7 @@ function shujuyuantable() {
         }
     });
     var tablestr = '';
-    if (shujuyuantables.length==0||shujuyuantables[0].querySql != null){
+    if (shujuyuantables.length==0||shujuyuantables[0].querySql != ""){
         tablestr = "<table class=\"table\">\n" +
             "\t\t\t\t\t\t   <thead>\n" +
             "\t\t\t\t\t\t\t  <tr>\n" +
@@ -239,6 +239,7 @@ function shujuyuantable() {
             "\t\t\t\t\t\t   <thead>\n" +
             "\t\t\t\t\t\t\t  <tr>\n" +
             "                  <th>"+$.i18n.prop('datasourceName')+"</th>\n" +
+            "                  <th>"+$.i18n.prop('alias')+"</th>\n" +
             "                  <th>"+$.i18n.prop('source')+"</th>\n" +
             "\t\t\t\t\t\t\t\t  <th>"+$.i18n.prop('founder')+"</th>\n" +
             "\t\t\t\t\t\t\t\t  <th>"+$.i18n.prop('permissions')+"</th>\n" +
@@ -284,7 +285,7 @@ function shujuyuantable() {
 function showshujuyuanbytable(id,querySql){
     var map = {
         "cond.connectionid":id,
-        "cond.sql":querySql
+        "cond.querySql":querySql
     }
     $.ajax({
         url: SERVER_URL + "/visualization/core/selectDatabySql",    //请求的url地址

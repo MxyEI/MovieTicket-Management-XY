@@ -81,7 +81,7 @@ function exportImage(){
                                 parent.window.location.href="category.html";
 							}
 						});
-						//parent.window.location.href=SERVER_URL+"/visualization/category.html";
+						//parent.window.location.href=SERVER_URL+"/visualization/category.html";//无用
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 					}
