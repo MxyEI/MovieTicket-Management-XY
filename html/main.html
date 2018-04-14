@@ -22,14 +22,14 @@
                             <div carousel-item>
                                 <ul class="layui-row layui-col-space10">
                                     <li class="layui-col-xs3">
-                                        <a lying-src="http://pano.revoke.cc/edit/" lying-title="VR" lying-icon="layui-icon-website">
+                                        <a lying-src="http://pano.revoke.cc/edit/" lying-title="VR" lying-icon="layui-icon-tupian">
                                             <i class="layui-icon layui-icon-website"></i>
                                             <cite>弹层</cite>
                                         </a>
                                     </li>
                                     <li class="layui-col-xs3">
-                                        <a lying-src="https://www.baidu.com/" lying-title="百度" lying-icon="layui-icon-website">
-                                            <i class="layui-icon layui-icon-website"></i>
+                                        <a lying-src="https://www.baidu.com/" lying-title="百度" lying-icon="layui-icon-tupian">
+                                            <i class="layui-icon layui-icon-tupian"></i>
                                             <cite>弹层</cite>
                                         </a>
                                     </li>
@@ -320,14 +320,14 @@
             e3 = echarts.init($('#e3').get(0), echartsTheme.dark);
         e1.setOption({
             title: {
-                text: '今日销量趋势'
+                text: '影片销售详情'
             },
             tooltip: {},
             legend: {
-                data:['销量', '优衣库', '邮件营销']
+                data:['销量', '价格', '电影']
             },
             xAxis: {
-                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                data: ["神奇女侠","速度激情","天天向上","头号玩家","高跟鞋","狂暴巨兽"]
             },
             yAxis: {},
             series: [{
@@ -335,11 +335,11 @@
                 type: 'bar',
                 data: [5, 20, 36, 10, 10, 20]
             }, {
-                name: '优衣库',
+                name: '价格',
                 data: [120, 200, 150, 80, 70, 110],
                 type: 'bar'
             }, {
-                name:'邮件营销',
+                name:'电影',
                 type: 'bar',
                 data:[120, 132, 101, 134, 90, 230]
             }]
@@ -372,13 +372,13 @@
                 smooth: true,
                 areaStyle: {normal: {}}
             }, {
-                name:'邮件营销',
+                name:'电影',
                 type:'line',
                 stack: '总量',
                 areaStyle: {normal: {}},
                 data:[120, 132, 101, 134, 90, 230, 210]
             }, {
-                name:'联盟广告',
+                name:'售价',
                 type:'line',
                 stack: '总量',
                 areaStyle: {normal: {}},
