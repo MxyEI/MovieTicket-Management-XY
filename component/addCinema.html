@@ -139,7 +139,7 @@
             "cinemaId":cinemaId,
             "cinemaName":cinemaName,"cinemaAddr":cinemaAddr
         };
-        if(cinemaId==null){
+        if(cinemaId==''){
             url = SERVER_URL + "/manageback/cinema/add";
         }else{
             url = SERVER_URL + "/manageback/cinema/update"
