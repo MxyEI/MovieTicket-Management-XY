@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <title>设置影厅</title>
+    <meta name="keywords" content="">
+    <!-- Bootstrap -->
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"  >
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css"  >
+    <style type="text/css">
+
+        @media screen and (max-width: 500px) {}
+
+        /*屏幕字*/
+        .front{width: 700px;margin: 5px 32px 45px 32px;background-color: #f0f0f0;	color: #666;text-align: center;padding: 3px;border-radius: 5px;}
+        /*预览界面*/
+        .booking-details {float: right;position: relative;width:200px;height: 450px; }
+        .booking-details h3 {margin: 5px 5px 0 0;font-size: 16px;}
+        .booking-details p{line-height:26px; font-size:16px; color:#999}
+        .booking-details p span{color:#666}
+        div.seatCharts-cell {color: #182C4E;height: 25px;width: 25px;line-height: 25px;margin: 3px;float: left;text-align: center;outline: none;font-size: 13px;}
+        div.seatCharts-seat {color: #fff;cursor: pointer;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
+        div.seatCharts-row {height: 35px;}
+        div.seatCharts-seat.available {background-color: #B9DEA0;}
+        div.seatCharts-seat.focused {background-color: #76B474;border: none;}
+        div.seatCharts-seat.selected {background-color: #E6CAC4;}
+        div.seatCharts-seat.unavailable {background-color: #472B34;cursor: not-allowed;}
+
+        div.seatCharts-container {border-right: 1px dotted #adadad;width: 900px;padding: 20px;float: left;}
+        div.seatCharts-legend {padding-left: 0px;position: absolute;bottom: 16px;}
+        ul.seatCharts-legendList {padding-left: 0px;}
+        .seatCharts-legendItem{float:left; width:90px;margin-top: 10px;line-height: 2;}
+        span.seatCharts-legendDescription {margin-left: 5px;line-height: 30px;}
+        .checkout-button {display: block;width:80px; height:24px; line-height:20px;margin: 10px auto;border:1px solid #999;font-size: 14px; cursor:pointer}
+        #selected-seats {max-height: 150px;overflow-y: auto;overflow-x: none;width: 200px;}
+        #selected-seats li{float:left; width:72px; height:26px; line-height:26px; border:1px solid #d3d3d3; background:#f7f7f7; margin:6px; font-size:14px; font-weight:bold; text-align:center}
+    </style>
+
+</head>
+
+<body>
+
+<div id="main">
+<hr>
+    <div class="col-md-8 column">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <input type="hidden" class="form-control" id="cinemaId" />
+                <label for="inputcinemaname" class="col-sm-2 control-label">影厅名称</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="cinemaHallName" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputcinemaaddr" class="col-sm-2 control-label">座位map图（01字符串）</label>
+                <div class="col-sm-10">
+                    <textarea  style="width:200px;height:200px;" id="seatmap"></textarea>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+            <!--<div class="col-sm-offset-2 col-sm-10">-->
+            <!--<div class="checkbox">-->
+            <!--<label><input type="checkbox" />Remember me</label>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default" onclick="savecinemainfo()">保存</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default" onclick="showseat()">预览平面图</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo">
+        <div id="seat-map">
+            <div class="front" style="display: none" id="screen">屏幕</div>
+        </div>
+        <div class="booking-details">
+
+        </div>
+        <div style="clear:both"></div>
+    </div>
+
+
+
+    <br/>
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.seat-charts.min.js"></script>
+<script type="text/javascript">
+
+//    $(document).ready(function() {
+//    showseat();
+//
+//    });
+
+    function showseat(){
+        var seatinfo =$("#seatmap").val();
+        var seatmap = [];
+        seatmap = seatinfo.replace(/00/g,'_').replace(/1/g,'a').split(",");
+        document.getElementById("screen").style.display="";
+        var map = ['aaa_______',
+            'gaaaaaaaaa',
+            '__________',
+            'aaaaaaaa__',
+            'aaaaaaaaaa',
+            'aaaaaaaaaa',
+            'aaaaaaaaaa',
+            'aaaaaaaaaa',
+            'aaaaaaaaaa',
+            'aa__aa__aa']
+        var $cart = $('#selected-seats'), //座位区
+            $counter = $('#counter'), //票数
+            $total = $('#total'); //总计金额
+
+        var str ="00111111111111111111110000,00111111111111111111110000,00111111111111111111000000,00111111111111111111000000,00111111111111111111000000,00111111111111111111000000,00111111111111111111000000,00111111111111111111000000,00111111111111111111000000,00111111111111111111000111,00111111111111111111000111,00111111111111111111000111,11111111111111111111111111";
+        var maps=[];
+        var mapss=[];
+
+        mapss = str.split(",");
+        maps=str.replace(/00/g,'_').replace(/1/g,'a').split(",");
+
+        console.log(maps);
+
+
+        var sc = $('#seat-map').seatCharts({
+            map: seatmap,
+            naming : {
+//                rows:30,
+//                columns:30,
+                top : false,
+                getLabel : function (character, row, column) {
+                    return column;
+                    console.log(column)
+                }
+            },
+            legend : { //定义图例
+                node : $('#legend'),
+                items : [
+                    [ 'a', 'available',   '可选座' ]
+
+                ]
+            },
+            click: function () { //点击事件
+
+
+//                if (this.status() == 'available') { //可选座
+//                    $('<li>'+(this.settings.row+1)+'排'+this.settings.label+'座</li>')
+//                        .attr('id', 'cart-item-'+this.settings.id)
+//                        .data('seatId', this.settings.id)
+//                        .appendTo($cart);
+//
+//                    $counter.text(sc.find('selected').length+1);
+//                    $total.text(recalculateTotal(sc)+price);
+//                    return 'selected';
+//                } else if (this.status() == 'selected') { //已选中
+//                    //更新数量
+//                    $counter.text(sc.find('selected').length-1);
+//                    //更新总计
+//                    $total.text(recalculateTotal(sc)-price);
+//
+//                    //删除已预订座位
+//                    $('#cart-item-'+this.settings.id).remove();
+//                    //可选座
+//                    return 'available';
+//                } else if (this.status() == 'unavailable') { //已售出
+//                    return 'unavailable';
+//                } else {
+//                    return this.style();
+//                }
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>
