@@ -60,6 +60,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="type"  class="col-sm-2 control-label">影片类型</label>
+                    <select id="moviestyle" name="movieStyleId">
+                        <option id="stylemovie" name="choose">请选择</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="inputmovierating" class="col-sm-2 control-label">评分</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="rating" />
@@ -129,6 +136,7 @@
         createtable();
         getcountryname("selectpicker");
         getmovietype("movietype");
+        getmoviestyle("moviestyle");
 
         //首映日期选择
         $('#setpubdate').datetimepicker({
@@ -217,6 +225,7 @@
         var title = $("#title").val();
         var countryId = $("#selectpicker").val();
         var movieTypeId = $("#movietype").val();
+        var movieStyleId = $("#moviestyle").val();
         var movieStatusId = $('input[name="radio"]:checked').val();
         var rating = $("#rating").val();
         var pubDate = $("#pubDate").val();
@@ -224,6 +233,10 @@
         var posterSmall = $("#posterSmall").val();
         var posterLarge = $("#posterLarge").val();
 
+        var styledata={
+            "movieId":movieId,
+            "movieStyleId":movieStyleId
+        }
         console.log(movieId)
         if(movieId==''){
             var data={
@@ -258,6 +271,23 @@
             dataType: "json",   //返回格式为json
             async: false,//请求是否异步，默认为异步，这也是ajax重要特性
             data:data,
+            type: "post",   //请求方式
+            success: function (result) {
+                console.log(result);
+            },
+            complete: function () {
+
+            },
+            error: function () {
+            }
+        });
+
+        //保存影片类型
+        $.ajax({
+            url: SERVER_URL + "/manageback/r/movie/moviestyle/add",
+            dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            data:styledata,
             type: "post",   //请求方式
             success: function (result) {
                 console.log(result);
@@ -312,6 +342,35 @@
                 var h="";
                 $.each(result.data.list, function(key, value) {//拼接option
                     h += "<option value='" + value.movieTypeId + "'>" + value.typeName
+                        + "</option>";
+                });
+                $("#"+tcId).append(h);//append 添加进去并展示
+                $("#"+tcId).on("change",function(a,b,c){
+                    var index = $("#"+tcId+" option:selected")[0].index-1;
+
+                })
+            },
+            complete: function () {
+
+            },
+            error: function () {
+            }
+        });
+
+    }
+
+    //设置影片类型
+    function getmoviestyle(tcId) {
+
+        $.ajax({
+            url: SERVER_URL + "/manageback/moviestyle/list",    //请求的url地址
+            dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            type: "post",   //请求方式
+            success: function (result) {
+                var h="";
+                $.each(result.data.list, function(key, value) {//拼接option
+                    h += "<option value='" + value.movieStyleId + "'>" + value.styleName
                         + "</option>";
                 });
                 $("#"+tcId).append(h);//append 添加进去并展示
