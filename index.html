@@ -186,16 +186,16 @@
 
     $(function () {
         checkCookie();
-        var userinfo = getCookie("username");
+        var userinfo = getCookie("manage_username");
         //document.getElementById("userinfo").innerHTML=userinfo;
         $("#userinfo").text(userinfo);
 
     });
 
     function logout() {
-
+        getRootPath();
         clearCookie();
-        window.location.href = "http://localhost:63343/movieticket-management-xy/login.html";
+        window.location.href = manageurl+"/login.html";
     }
 </script>
 </html>

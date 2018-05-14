@@ -1,4 +1,4 @@
-// var SERVER_URL = getRootPath();
+var manageurl = getRootPath();
 var SERVER_URL = 'http://localhost:8001';
 var savePath="";
 
@@ -14,10 +14,10 @@ function getRootPath(){
     //获取带"/"的项目名，如：/chuchai
     var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
     //判断是否存在端口号或者上下文
-    if(projectName == '/resource'){
-        return("");
-    }else{
+    if(projectName == '/movieticket-management-xy'){
         return(projectName);
+    }else{
+        return("");
     }
 }
 
@@ -56,15 +56,15 @@ function delCookie(name) {
 }
 
 function checkCookie() {
-    if (getCookie("username") == null || getCookie("id") == null) {
+    if (getCookie("manage_username") == null || getCookie("manage_id") == null) {
         alert("未登录!");
         window.location.href = "login.html";
     }
 }
 
 function clearCookie() {
-    delCookie("username");
-    delCookie("id");
+    delCookie("manage_username");
+    delCookie("manage_id");
     window.location.href = "login.html";
 }
 

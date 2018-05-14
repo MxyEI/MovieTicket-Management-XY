@@ -69,8 +69,8 @@
             data : $('#userlogin').serialize(),
             success : function(result) {
                 if (result.code == 200) {
-                    setCookie("id", result.data.id);
-                    setCookie("username", result.data.username);
+                    setCookie("manage_id", result.data.id);
+                    setCookie("manage_username", result.data.username);
                     loginRedirect();
                 } else {
                     alert(result.message);
@@ -84,7 +84,8 @@
 
     function loginRedirect() {
         //window.location.href = "/index.html";
-        window.location.href = "http://localhost:63343/movieticket-management-xy/index.html"
+        getRootPath();
+        window.location.href = manageurl+"/index.html"
     }
 </script>
 </html>
