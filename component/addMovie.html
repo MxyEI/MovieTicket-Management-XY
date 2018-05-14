@@ -282,12 +282,14 @@
                     data:styledata,
                     type: "post",   //请求方式
                     success: function (result) {
-                        console.log(result);
+                        //console.log(result);
+                        alert("添加成功");
                     },
                     complete: function () {
 
                     },
                     error: function () {
+                        alert("添加失败");
                     }
                 });
 
