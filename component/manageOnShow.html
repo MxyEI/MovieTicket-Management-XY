@@ -24,12 +24,12 @@
 <hr>
 <div class="container">
     <div class="row clearfix">
-        <div class="col-md-2 column">
+        <div class="col-md-1 column">
 
         </div>
 
         <!-- 添加影院信息表单-->
-        <div class="col-md-10 column">
+        <div class="col-md-11 column">
             <!-- 影院信息表格-->
             <table id="movieonshowtable" class="table table-hover">
 
@@ -40,18 +40,19 @@
 
 
 <script>
+    var onshowid;
     $(function(){
         checkCookie();
         createtable();
     });
 
     /**
-     * 影院信息表格
+     * 影讯信息表格
      */
     function createtable() {
         var alltables = [];
         $.ajax({
-            url: SERVER_URL + "/manageback/cinema/list",    //请求的url地址
+            url: SERVER_URL + "/manageback/movieonshow/list",    //请求的url地址
             dataType: "json",   //返回格式为json
             async: false,//请求是否异步，默认为异步，这也是ajax重要特性
             type: "post",   //请求方式
@@ -89,21 +90,61 @@
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
             columns: [{
-                field: 'cinemaName',
-                title: "影院名称"
+                field: 'movieonshow.movieOnShowId',
+                title: "影讯id",
+                visible:false
+            },{
+                field: 'movie.title',
+                title: "放映日期"
+            },{
+                field: 'movieonshow.showDate',
+                title: "放映日期"
+            },{
+                field: 'movieonshow.showTime',
+                title: "放映时间"
+            },{
+                field: 'cinema.cinemaName',
+                title: "影院名"
+            },{
+                field: 'cinemahall.hallName',
+                title: "影厅名"
+            },{
+                field: 'Desc',
+                title: '操作',
+                formatter : deleteFormatter
             }],
             data: alltables
         });
-        //点击数据连接表格中的行触发点击事件：显示连接信息
-        $('#cinematable').on('click-row.bs.table', function (e, row, element)
-        {
-            console.log(row);
-            document.getElementById('cinemaId').value = row.cinemaId;
-            document.getElementById('cinemaName').value = row.cinemaName;
-            document.getElementById('cinemaAddr').value = row.cinemaAddr;
 
+        function deleteFormatter(value, row, index) {
+            onshowid = row.movieonshow.movieOnShowId;
+            return [
+                '<button  type="button" class="btn btn-primary btn-xs" onclick="deleteOnshow('+onshowid+')">删除</button>', ]
+                .join('');
+        }
+
+    }
+
+    function deleteOnshow(onshowid) {
+        var data = {
+            "id":onshowid
+        }
+        console.log(onshowid);
+        $.ajax({
+            url: SERVER_URL + "/manageback/movieonshow/delete",    //请求的url地址
+            dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            data:data,
+            type: "post",   //请求方式
+            success: function (result) {
+                alert("删除成功");
+            },
+            complete: function () {
+
+            },
+            error: function () {
+            }
         });
-
     }
     
 </script>
