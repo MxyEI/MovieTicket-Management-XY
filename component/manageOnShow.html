@@ -116,6 +116,12 @@
             data: alltables
         });
 
+//        $('#movieonshowtable').on('click-row.bs.table', function (e, row, element)
+//        {
+//            console.log(row);
+//
+//        });
+
         function deleteFormatter(value, row, index) {
             onshowid = row.movieonshow.movieOnShowId;
             return [
@@ -126,6 +132,7 @@
     }
 
     function deleteOnshow(onshowid) {
+
         var data = {
             "id":onshowid
         }
@@ -138,6 +145,7 @@
             type: "post",   //请求方式
             success: function (result) {
                 alert("删除成功");
+                createtable();
             },
             complete: function () {
 
