@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css"  >
     <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"  >
+    <link rel="stylesheet" href="css/bootstrap-multiselect.css">
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap-table.js"></script>
@@ -18,6 +19,7 @@
     <!-- Latest compiled and minified Locales -->
     <script src="js/bootstrap-table-export.js"></script>
     <script src="./js/common.js"></script>
+    <script src="js/bootstrap-multiselect.js"></script>
 
     <script src="js/moment-with-locales.min.js"></script>
     <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
@@ -62,8 +64,8 @@
 
                 <div class="form-group">
                     <label for="type"  class="col-sm-2 control-label">影片类型</label>
-                    <select id="moviestyle" name="movieStyleId">
-                        <option id="stylemovie" name="choose">请选择</option>
+                    <select id="moviestyle" name="movieStyleId" multiple="multiple">
+
                     </select>
                 </div>
 
@@ -226,7 +228,6 @@
         var title = $("#title").val();
         var countryId = $("#selectpicker").val();
         var movieTypeId = $("#movietype").val();
-        var movieStyleId = $("#moviestyle").val();
         var movieStatusId = $('input[name="radio"]:checked').val();
         var rating = $("#rating").val();
         var pubDate = $("#pubDate").val();
@@ -234,10 +235,34 @@
         var posterSmall = $("#posterSmall").val();
         var posterLarge = $("#posterLarge").val();
 
-        var styledata={
-            "movieId":movieId,
-            "movieStyleId":movieStyleId
+        var movieStyleId = $('#moviestyle').val();
+        for(var i=0;i<movieStyleId.length;i++){
+            //console.info(movieStyleId[i]);
+            var styledata={
+                "movieId":movieId,
+                "movieStyleId":movieStyleId[i]
+            }
+            console.log(styledata);
+            //保存影片类型
+            $.ajax({
+                url: SERVER_URL + "/manageback/r/movie/moviestyle/add",
+                dataType: "json",   //返回格式为json
+                async: true,//请求是否异步，默认为异步，这也是ajax重要特性
+                data:styledata,
+                type: "post",   //请求方式
+                success: function (result) {
+                    //console.log(result);
+                },
+                complete: function () {
+
+                },
+                error: function () {
+                    alert("影片类型添加失败");
+                }
+            });
+
         }
+
         console.log(movieId)
         if(movieId==''){
             var data={
@@ -274,25 +299,7 @@
             data:data,
             type: "post",   //请求方式
             success: function (result) {
-                //保存影片类型
-                $.ajax({
-                    url: SERVER_URL + "/manageback/r/movie/moviestyle/add",
-                    dataType: "json",   //返回格式为json
-                    async: false,//请求是否异步，默认为异步，这也是ajax重要特性
-                    data:styledata,
-                    type: "post",   //请求方式
-                    success: function (result) {
-                        //console.log(result);
-                        alert("添加成功");
-                    },
-                    complete: function () {
-
-                    },
-                    error: function () {
-                        alert("添加失败");
-                    }
-                });
-
+                alert('添加成功');
             },
             complete: function () {
 
@@ -372,6 +379,7 @@
             async: false,//请求是否异步，默认为异步，这也是ajax重要特性
             type: "post",   //请求方式
             success: function (result) {
+                $("#"+tcId).empty();
                 var h="";
                 $.each(result.data.list, function(key, value) {//拼接option
                     h += "<option value='" + value.movieStyleId + "'>" + value.styleName
@@ -381,7 +389,36 @@
                 $("#"+tcId).on("change",function(a,b,c){
                     var index = $("#"+tcId+" option:selected")[0].index-1;
 
-                })
+                });
+
+                $('#'+tcId).multiselect("destroy").multiselect({
+                    buttonClass: 'btn',
+                    buttonWidth: 'auto',
+                    buttonText: function(options) {
+                        if (options.length == 0) {
+                            return '请选择类型';
+                        }
+                        else {
+                            var selected = '';
+                            options.each(function() {
+                                selected += $(this).text() + ',';
+                            });
+                            return selected.substr(0, selected.length -1) ;
+                        }
+                    },
+                    nonSelectedText: '请选择数据',
+                    enableFiltering: true,
+                    allSelectedText:'取消全选',
+                    selectAllText: '全选',
+                    enableClickableOptGroups: true,
+                    enableCollapsibleOptGroups: true,
+                    includeSelectAllOption: true,
+                    dropRight: true,
+
+                });
+                $(".multiselect-search").attr('placeholder','搜索');
+
+
             },
             complete: function () {
 
@@ -390,7 +427,10 @@
             }
         });
 
+
+
     }
+
 </script>
 
 
