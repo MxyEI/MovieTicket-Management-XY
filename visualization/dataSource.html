@@ -215,9 +215,13 @@
                     </div>
                     <div class="tab-pane" id="panel-bxx">
                         <div id="div" align="left" style="margin-top: 20px;">
+                            <!--添加数据源-->
                             <a class="btn btn-default btn-sm"  id="addsource" style="margin-right: 10px;background:transparent;color:#777777" data-toggle="modal"  onclick="querytable()"  href="#addDrill">
                                 <i class="fa fa-plus i18n" name="addDataSource"></i> </a>
+                            <a class="btn btn-default btn-sm"  id="addsource2" style="margin-right: 10px;background:transparent;color:#777777" data-toggle="modal"   href="#addDrill2">
+                                高级自定义语句 </a>
                         </div>
+
                         <div id="shujuyuantable">
                         </div>
                     </div>
@@ -228,6 +232,7 @@
             </div>
         </div>
     </div>
+    <!--添加数据源的模态框-->
     <div class="modal fade" id="addDrill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="margin: 100px;width: auto">
             <div class="modal-content">
@@ -284,7 +289,46 @@
         <!-- /.modal -->
     </div>
 
+    <div class="modal fade" id="addDrill2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin: 100px;width: auto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" onclick="closemodal4()" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title i18n" name="addDataSource" id="myModalLabel2"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="sqlform2">
+                        <div class="form-group">
+                            <label for="datasourcename" class="i18n" name="datasourceName"></label><input class="form-control" name="datasourcename" id="datasourcename2" />
+                        </div>
+                        <!--<div class="myOwnDdl">-->
+                        <!--<label for="name"  >表名</label>-->
+                        <!--<select id="tablesbyinstancename" multiple="multiple" class="form-control" name="tablesbyinstancename">-->
+                        <!--<option></option>-->
+                        <!--</select>-->
+                        <!--<div>-->
 
+                        <div class="form-group">
+                            <label for="sqlstr" style="" class="i18n" name="mysqlstrs"></label>
+                            <textarea class="form-control"  rows="3"  id="sqlstr2" name="sqlstr2"></textarea>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default btn-sm" id="yulan2"  style="margin-right: 10px;background:transparent;color:#777777" data-toggle="modal" onclick="yulansqlbytable2()" href="#">
+                        <i class="glyphicon glyphicon-inbox i18n" name="preview"></i></a>
+                    <a class="btn btn-default btn-sm" onclick="closemodal4()" style="margin-right: 10px;background:transparent;color:#777777" href="#">
+                        <i class="	glyphicon glyphicon-remove i18n" name="close"></i></a>
+                    <a class="btn btn-default btn-sm" onclick="savedatasorce2()" style="margin-right: 10px;background:transparent;color:#777777" href="#">
+                        <i class="glyphicon glyphicon-ok i18n" name="confirm"></i></a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
 
 
 </div>

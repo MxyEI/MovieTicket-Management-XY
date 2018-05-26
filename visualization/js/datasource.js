@@ -312,6 +312,15 @@ function closemodal1(){
     $('#sqlform').bootstrapValidator('resetForm', true);
 
 }
+
+//关闭数据源模态框
+function closemodal4(){
+    $('#addDrill2').modal('hide');
+    $('#sqlform2').get(0).reset();
+    $('#sqlform2').bootstrapValidator('resetForm', true);
+
+}
+
 //保存数据库数据源
 function savedatasorce(){
     var sqlformvali = $("#sqlform").data('bootstrapValidator');
@@ -333,6 +342,34 @@ function savedatasorce(){
             success: function (result) {
                 $('#addDrill').modal('hide');
                 $('#sqlform').get(0).reset();
+                shujuyuantable()
+            },
+            complete: function () {
+
+            },
+            error: function () {
+            }
+        });
+    }
+}
+
+//保存数据库数据源
+function savedatasorce2(){
+    var sqlformvali = $("#sqlform2").data('bootstrapValidator');
+    $("#sqlform2").bootstrapValidator('validate');
+    var querysql=$("#sqlstr2").val();
+    if(sqlformvali.isValid()) {
+        var vjson={"connectionid":connectionid,"sourcename":$('#datasourcename2').val(),
+            "querysql":querysql}
+        $.ajax({
+            url: SERVER_URL + "/visualization/core/saveDatasourceInfos",    //请求的url地址
+            dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            data:{jsonString :JSON.stringify({"datasourceInfo":vjson})},
+            type: "post",   //请求方式
+            success: function (result) {
+                $('#addDrill2').modal('hide');
+                $('#sqlform2').get(0).reset();
                 shujuyuantable()
             },
             complete: function () {
@@ -537,6 +574,38 @@ function yulansqlbytable(){
         });
     }
 }
+
+function yulansqlbytable2(){
+    var sqlformvali2 = $("#sqlform2").data('bootstrapValidator');
+    $("#sqlform2").bootstrapValidator('validate');
+    var querySql2=$("#sqlstr2").val();
+    var map = {
+        "cond.connectionid":connectionid,
+        "cond.querySql":querySql2
+    }
+
+        $.ajax({
+            url: SERVER_URL + "/visualization/core/selectDatabySql",    //请求的url地址
+            dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            data: map,
+            type: "post",   //请求方式
+
+            success: function (result) {
+                datadetailInfos = result.datadetailInfos;
+                createTable("yulantable");
+                $('#yulanmoban').modal('show');
+            },
+            complete: function () {
+
+            },
+            error: function () {
+            }
+        });
+
+}
+
+
 function altRows(id){
     if(document.getElementsByTagName){
         var table = document.getElementById(id);
