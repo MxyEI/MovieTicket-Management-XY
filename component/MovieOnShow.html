@@ -270,7 +270,7 @@ function ceshi() {
                     var str =result.data[i].showDate+" "+result.data[i].showTime;
                     str = str.replace(/-/g,"/");
                     var datetmp = new Date(str);
-                    console.log(datetmp)
+                    console.log(datetmp);
                     if(((date.getTime()>datetmp.getTime())&&((date.getTime()-datetmp.getTime())/1000/60)<movielength)){
                         alert("此档期与现有档期冲突，原因：当天该影厅此时段已有电影放映");
                     }else if(((date.getTime()<datetmp.getTime())&&((datetmp.getTime()-date.getTime())/1000/60)<movielength)){
