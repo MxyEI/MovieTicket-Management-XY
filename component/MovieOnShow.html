@@ -39,21 +39,21 @@
                 <div class="form-group">
                     <input type="hidden" class="form-control" id="movieOnShowId" />
 
-                    <label for="inputmoviename" class="col-sm-2 control-label">选择电影</label>
+                    <label  class="col-sm-2 control-label">选择电影</label>
                     <select id="selectmovie" name="moviename">
                         <option  name="choose">请选择</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="country"  class="col-sm-2 control-label">选择影院</label>
+                    <label   class="col-sm-2 control-label">选择影院</label>
                     <select id="selectcinema" name="cinemaname">
                         <option  name="choose">请选择</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="type"  class="col-sm-2 control-label">选择影厅</label>
+                    <label  class="col-sm-2 control-label">选择影厅</label>
                     <select id="selecthall" name="hall">
                         <option  name="choose">请选择</option>
                     </select>
@@ -83,40 +83,40 @@
 
                     <hr>
                 <div class="form-group">
-                    <label for="inputpotersmall" class="col-sm-2 control-label">影片语言</label>
+                    <label  class="col-sm-2 control-label">影片语言</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="lang" />
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="inputpoterlarge" class="col-sm-2 control-label">影片单价</label>
+                    <label class="col-sm-2 control-label">影片单价</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="price" />
                     </div>
                 </div>
 
-
-                <!--<div class="form-group">-->
-                <!--<div class="col-sm-offset-2 col-sm-10">-->
-                <!--<div class="checkbox">-->
-                <!--<label><input type="checkbox" />Remember me</label>-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</div>-->
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default" onclick="savemovieinfo()">保存</button>
-                    </div>
+
                 </div>
             </form>
+
         </div>
     </div>
 </div>
-
+<div class="col-sm-offset-2 col-sm-10">
+    <button type="submit" class="btn btn-default" onclick="savemovieinfo()">保存</button>
+</div>
+<!--<div class="col-sm-offset-2 col-sm-10">-->
+    <!--<button type="submit" class="btn btn-default" onclick="ceshi()">查询该档期是否冲突</button>-->
+<!--</div>-->
 
 <script>
+    //记录影片时长
+    var movielength;
+
     $(function(){
+
         checkCookie();
 
         getmoviename("selectmovie");
@@ -137,7 +137,72 @@
 
     });
 
+    //测试档期是否与现有档期冲突
+function ceshi() {
 
+    var showDate = $("#showDate").val();
+    var showTime = $("#showTime").val();
+    var val = showDate+" "+showTime;
+    val = val.replace(/-/g,"/");
+    var date = new Date(val);
+    //date.setMinutes(date.getMinutes()+150);
+    console.log(date);
+    var movieId = $("#selectmovie").val();
+    var cinemaHallId = $("#selecthall").val();
+    var data={
+        "movieId":movieId,
+        "cinemaHallId":cinemaHallId,
+        "showDate":showDate
+    };
+
+    $.ajax({
+        url: SERVER_URL + "/manageback/movie/detail",    //请求的url地址
+        dataType: "json",   //返回格式为json
+        async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+        data:{"id":movieId},
+        type: "post",   //请求方式
+        success: function (result) {
+            console.log(result.data.length);
+            movielength = result.data.length;
+        },
+        complete: function () {
+
+        },
+        error: function () {
+        }
+    });
+
+    $.ajax({
+        url: SERVER_URL + "/manageback/movieonshow/selectsameonshow",    //请求的url地址
+        dataType: "json",   //返回格式为json
+        async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+        data:data,
+        type: "post",   //请求方式
+        success: function (result) {
+            console.log(result);
+            for(var i = 0;i<result.data.length;i++){
+
+                var str =result.data[i].showDate+" "+result.data[i].showTime;
+                str = str.replace(/-/g,"/");
+                var datetmp = new Date(str);
+                console.log(datetmp)
+                if(((date.getTime()>datetmp.getTime())&&((date.getTime()-datetmp.getTime())/1000/60)<movielength)){
+                    alert("此档期与现有档期冲突，原因：当天该影厅此时段已有电影放映");
+                }else if(((date.getTime()<datetmp.getTime())&&((datetmp.getTime()-date.getTime())/1000/60)<movielength)){
+                    alert("此档期与现有档期冲突，原因：当天该影厅此时段已有电影放映");
+                }else {
+
+                }
+
+            }
+        },
+        complete: function () {
+
+        },
+        error: function () {
+        }
+    });
+}
 
 
     function savemovieinfo() {
@@ -150,6 +215,11 @@
         var lang = $("#lang").val();
         var price = $("#price").val();
 
+        //判断档期是否冲突
+        var val = showDate+" "+showTime;
+        val = val.replace(/-/g,"/");
+        var date = new Date(val);
+
         var data={
             "movieId":movieId,
             "cinemaId":cinemaId,
@@ -160,22 +230,17 @@
             "price":price
 
         };
-        console.log(movieId)
-        if(movieOnShowId==''){
-            url = SERVER_URL + "/manageback/movieonshow/add";
-        }else{
-            url = SERVER_URL + "/manageback/movieonshow/update"
-        }
 
+        //获取添加档期的电影的影片时长（分钟）
         $.ajax({
-            url: SERVER_URL + "/manageback/movieonshow/add",    //请求的url地址
+            url: SERVER_URL + "/manageback/movie/detail",    //请求的url地址
             dataType: "json",   //返回格式为json
             async: false,//请求是否异步，默认为异步，这也是ajax重要特性
-            data:data,
+            data:{"id":movieId},
             type: "post",   //请求方式
             success: function (result) {
-                console.log(result);
-                alert("添加成功");
+                console.log(result.data.length);
+                movielength = result.data.length;
             },
             complete: function () {
 
@@ -183,6 +248,67 @@
             error: function () {
             }
         });
+
+        //console.log(movieId)
+        if(movieOnShowId==''){
+            url = SERVER_URL + "/manageback/movieonshow/add";
+        }else{
+            url = SERVER_URL + "/manageback/movieonshow/update"
+        }
+
+
+        $.ajax({
+            url: SERVER_URL + "/manageback/movieonshow/selectsameonshow",    //请求的url地址
+            dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            data:data,
+            type: "post",   //请求方式
+            success: function (result) {
+                console.log(result);
+                for(var i = 0;i<result.data.length;i++){
+
+                    var str =result.data[i].showDate+" "+result.data[i].showTime;
+                    str = str.replace(/-/g,"/");
+                    var datetmp = new Date(str);
+                    console.log(datetmp)
+                    if(((date.getTime()>datetmp.getTime())&&((date.getTime()-datetmp.getTime())/1000/60)<movielength)){
+                        alert("此档期与现有档期冲突，原因：当天该影厅此时段已有电影放映");
+                    }else if(((date.getTime()<datetmp.getTime())&&((datetmp.getTime()-date.getTime())/1000/60)<movielength)){
+                        alert("此档期与现有档期冲突，原因：当天该影厅此时段已有电影放映");
+                    }else {
+
+                        //无冲突则保存档期
+                        $.ajax({
+                            url: SERVER_URL + "/manageback/movieonshow/add",    //请求的url地址
+                            dataType: "json",   //返回格式为json
+                            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+                            data:data,
+                            type: "post",   //请求方式
+                            success: function (result) {
+                                console.log(result);
+                                alert("添加成功");
+                            },
+                            complete: function () {
+
+                            },
+                            error: function () {
+                            }
+                        });
+                    }
+
+                }
+            },
+            complete: function () {
+
+            },
+            error: function () {
+            }
+        });
+
+
+
+
+
 
     }
 
