@@ -272,9 +272,9 @@ function ceshi() {
                     var datetmp = new Date(str);
                     console.log(datetmp);
                     if(((date.getTime()>datetmp.getTime())&&((date.getTime()-datetmp.getTime())/1000/60)<movielength)){
-                        alert("此档期与现有档期冲突，原因：当天该影厅此时段已有电影放映");
+                        alert("此档期与现有档期冲突，原因：当天该影厅"+str+"到"+val+"已有电影放映");
                     }else if(((date.getTime()<datetmp.getTime())&&((datetmp.getTime()-date.getTime())/1000/60)<movielength)){
-                        alert("此档期与现有档期冲突，原因：当天该影厅此时段已有电影放映");
+                        alert("此档期与现有档期冲突，原因：当天该影厅"+val+"到"+str+"已有电影放映");
                     }else {
 
                         //无冲突则保存档期
