@@ -1,5 +1,5 @@
 // var SERVER_URL = getRootPath();
-var SERVER_URL = 'http://localhost:8080';
+var SERVER_URL = 'http://localhost:8002';
 var savePath="";
 
 function getRootPath(){
