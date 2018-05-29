@@ -265,6 +265,24 @@ function ceshi() {
             type: "post",   //请求方式
             success: function (result) {
                 console.log(result);
+                if(result.data.length==0){
+                    $.ajax({
+                        url: SERVER_URL + "/manageback/movieonshow/add",    //请求的url地址
+                        dataType: "json",   //返回格式为json
+                        async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+                        data:data,
+                        type: "post",   //请求方式
+                        success: function (result) {
+                            console.log(result);
+                            alert("添加成功");
+                        },
+                        complete: function () {
+
+                        },
+                        error: function () {
+                        }
+                    });
+                }
                 for(var i = 0;i<result.data.length;i++){
 
                     var str =result.data[i].showDate+" "+result.data[i].showTime;
