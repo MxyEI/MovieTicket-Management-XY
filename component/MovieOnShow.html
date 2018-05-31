@@ -265,7 +265,7 @@ function ceshi() {
             type: "post",   //请求方式
             success: function (result) {
                 console.log(result);
-                if(result.data.length==0){
+                if(result.data.length==0||result.data==null){
                     $.ajax({
                         url: SERVER_URL + "/manageback/movieonshow/add",    //请求的url地址
                         dataType: "json",   //返回格式为json
